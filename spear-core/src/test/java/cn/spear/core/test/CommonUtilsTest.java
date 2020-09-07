@@ -17,7 +17,7 @@ import java.util.Map;
  * @date 2020/9/4
  */
 @Slf4j
-public class UtilsTest {
+public class CommonUtilsTest {
 
     @Test
     public void isEmptyForStringTest() {

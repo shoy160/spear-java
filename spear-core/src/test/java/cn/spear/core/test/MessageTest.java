@@ -1,6 +1,6 @@
 package cn.spear.core.test;
 
-import cn.spear.core.message.BaseMessage;
+import cn.spear.core.message.model.impl.BaseMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 

@@ -1,7 +1,6 @@
-package cn.spear.core.message.impl;
+package cn.spear.core.message.model.impl;
 
-import cn.spear.core.message.BaseMessage;
-import cn.spear.core.message.ResultMessage;
+import cn.spear.core.message.model.ResultMessage;
 import lombok.Getter;
 import lombok.Setter;
 

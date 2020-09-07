@@ -1,9 +1,11 @@
 package cn.spear.core.service;
 
-import cn.spear.core.message.InvokeMessage;
+import cn.spear.core.message.model.InvokeMessage;
 import cn.spear.core.message.MessageSender;
 
 /**
+ * 服务执行器
+ *
  * @author shay
  * @date 2020/9/4
  */

@@ -1,5 +1,7 @@
 package cn.spear.core.message;
 
+import cn.spear.core.message.model.impl.BaseMessage;
+
 /**
  * 消息发送器
  *

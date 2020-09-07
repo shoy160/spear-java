@@ -1,6 +1,8 @@
 package cn.spear.core.util;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
@@ -42,5 +44,39 @@ public class CommonUtils {
 
     public static String fastId() {
         return UUID.randomUUID().toString();
+    }
+
+    public static <T> Class<T> getGenericClass(Class<?> parentClazz, int index) {
+        try {
+            ParameterizedType genericSuperclass = (ParameterizedType) parentClazz.getGenericSuperclass();
+            if (genericSuperclass == null) {
+                return null;
+            }
+            Type[] typeArguments = genericSuperclass.getActualTypeArguments();
+            if (isEmpty(typeArguments) || typeArguments.length <= index) {
+                return null;
+            }
+            return (Class<T>) typeArguments[index];
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public static <T> T createGenericInstance(Class<?> parentClazz) {
+        return createGenericInstance(parentClazz, 0);
+    }
+
+    public static <T> T createGenericInstance(Class<?> parentClazz, int index) {
+        Class<T> clazz = getGenericClass(parentClazz, index);
+        if (clazz == null) {
+            return null;
+        }
+        try {
+            return clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

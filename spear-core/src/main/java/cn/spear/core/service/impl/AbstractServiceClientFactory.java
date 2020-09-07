@@ -7,7 +7,7 @@ import cn.spear.core.service.ServiceClientFactory;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 客户端工厂基础实现
+ * 客户端工厂抽象类
  *
  * @author shay
  * @date 2020/9/4

@@ -1,4 +1,4 @@
-package cn.spear.core.message;
+package cn.spear.core.message.model;
 
 import java.io.Serializable;
 
@@ -15,4 +15,11 @@ public interface Message extends Serializable {
      * @return Id
      */
     String getId();
+
+    /**
+     * 设置Id
+     *
+     * @param id id
+     */
+    void setId(String id);
 }

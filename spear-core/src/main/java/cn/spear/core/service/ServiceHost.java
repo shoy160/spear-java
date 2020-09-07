@@ -27,6 +27,13 @@ public interface ServiceHost extends MessageListener {
     }
 
     /**
+     * 添加监听
+     *
+     * @param listener listener
+     */
+    void addListener(MessageListener listener);
+
+    /**
      * 停止服务
      */
     void stop();

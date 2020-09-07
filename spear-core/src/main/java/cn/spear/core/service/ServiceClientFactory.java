@@ -1,7 +1,7 @@
 package cn.spear.core.service;
 
 /**
- * 客户端工程
+ * 服务客户端工程
  *
  * @author shay
  * @date 2020/9/4
