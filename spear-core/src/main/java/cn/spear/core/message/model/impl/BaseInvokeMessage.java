@@ -27,11 +27,11 @@ public class BaseInvokeMessage<T extends DynamicMessage> extends BaseMessage imp
 
     public BaseInvokeMessage(InvokeMessageImpl message) {
         this();
-        this.setValue(message);
+        this.initMessage(message);
     }
 
 
-    public void setValue(InvokeMessageImpl message) {
+    public void initMessage(InvokeMessageImpl message) {
         this.setId(message.getId());
         this.serviceId = message.getServiceId();
         if (CommonUtils.isNotEmpty(message.getParameters())) {
@@ -40,7 +40,7 @@ public class BaseInvokeMessage<T extends DynamicMessage> extends BaseMessage imp
                 if (item == null) {
                     continue;
                 }
-                item.setValue(message.getParameters().get(key));
+                item.initValue(message.getParameters().get(key));
                 this.parameters.put(key, item);
             }
         }
@@ -51,14 +51,14 @@ public class BaseInvokeMessage<T extends DynamicMessage> extends BaseMessage imp
         }
     }
 
-    public InvokeMessageImpl getValue() {
+    public InvokeMessageImpl message() {
         InvokeMessageImpl message = new InvokeMessageImpl();
         message.setId(this.getId());
         message.setServiceId(this.serviceId);
         if (CommonUtils.isNotEmpty(this.parameters)) {
             Map<String, Object> parameters = new HashMap<>(this.parameters.size());
             for (String key : this.parameters.keySet()) {
-                parameters.put(key, this.parameters.get(key).getValue());
+                parameters.put(key, this.parameters.get(key).value());
             }
             message.setParameters(parameters);
         }

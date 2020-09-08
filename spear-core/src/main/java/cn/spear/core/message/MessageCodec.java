@@ -17,16 +17,6 @@ public interface MessageCodec {
     byte[] encode(Object message, boolean gzip);
 
     /**
-     * 消息解码
-     *
-     * @param data  数据byte[]
-     * @param clazz 类型
-     * @param gzip  是否开启Gzip压缩
-     * @return Object
-     */
-    Object decode(byte[] data, Class<?> clazz, boolean gzip);
-
-    /**
      * 消息编码
      *
      * @param message 消息体
@@ -35,6 +25,16 @@ public interface MessageCodec {
     default byte[] encode(Object message) {
         return encode(message, true);
     }
+
+    /**
+     * 消息解码
+     *
+     * @param data  数据byte[]
+     * @param clazz 类型
+     * @param gzip  是否开启Gzip压缩
+     * @return Object
+     */
+    Object decode(byte[] data, Class<?> clazz, boolean gzip);
 
     /**
      * 消息解码

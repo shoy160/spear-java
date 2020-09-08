@@ -1,16 +1,20 @@
 package cn.spear.core.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
+ * Stream Utils
+ *
  * @author shay
  * @date 2020/9/7
  */
+@Slf4j
 public class StreamUtils {
 
     public static boolean isGzip(byte[] data) {
@@ -32,12 +36,19 @@ public class StreamUtils {
         if (CommonUtils.isEmpty(data)) {
             return new byte[0];
         }
+        if (log.isDebugEnabled()) {
+            log.debug("before gzip:{}", data.length);
+        }
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             try (GZIPOutputStream gzip = new GZIPOutputStream(out)) {
                 gzip.write(data);
                 gzip.finish();
             }
-            return out.toByteArray();
+            byte[] buffer = out.toByteArray();
+            if (log.isDebugEnabled()) {
+                log.debug("after gzip:{}", buffer.length);
+            }
+            return buffer;
         } catch (Exception e) {
             e.printStackTrace();
         }

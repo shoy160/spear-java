@@ -1,7 +1,7 @@
 package cn.spear.core.service;
 
-import cn.spear.core.message.model.InvokeMessage;
 import cn.spear.core.message.MessageSender;
+import cn.spear.core.message.model.impl.InvokeMessageImpl;
 
 /**
  * 服务执行器
@@ -16,5 +16,5 @@ public interface ServiceExecutor {
      * @param sender  发送者
      * @param message 调用消息
      */
-    void execute(MessageSender sender, InvokeMessage<?> message);
+    void execute(MessageSender sender, InvokeMessageImpl message);
 }

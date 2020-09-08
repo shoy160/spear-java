@@ -24,12 +24,12 @@ public interface DynamicMessage {
      *
      * @param value 对象
      */
-    void setValue(Object value);
+    void initValue(Object value);
 
     /**
      * 获取对象
      *
      * @return 对象
      */
-    Object getValue();
+    Object value();
 }

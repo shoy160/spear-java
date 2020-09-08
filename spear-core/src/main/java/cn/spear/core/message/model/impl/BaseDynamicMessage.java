@@ -3,29 +3,32 @@ package cn.spear.core.message.model.impl;
 import cn.spear.core.message.MessageSerializer;
 import cn.spear.core.message.model.DynamicMessage;
 import cn.spear.core.util.CommonUtils;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @author shay
  * @date 2020/9/7
  */
-@Getter
-@Setter
 public class BaseDynamicMessage implements DynamicMessage {
     private String contentType;
     private byte[] content;
-    private MessageSerializer serializer;
-
-    public BaseDynamicMessage() {
-    }
+    private final MessageSerializer serializer;
 
     public BaseDynamicMessage(MessageSerializer serializer) {
         this.serializer = serializer;
     }
 
     @Override
-    public void setValue(Object value) {
+    public String getContentType() {
+        return this.contentType;
+    }
+
+    @Override
+    public byte[] getContent() {
+        return this.content;
+    }
+
+    @Override
+    public void initValue(Object value) {
         if (value == null) {
             return;
         }
@@ -34,7 +37,7 @@ public class BaseDynamicMessage implements DynamicMessage {
     }
 
     @Override
-    public Object getValue() {
+    public Object value() {
         if (this.content == null || CommonUtils.isEmpty(this.contentType)) {
             return null;
         }

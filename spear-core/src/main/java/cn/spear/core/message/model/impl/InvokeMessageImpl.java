@@ -19,6 +19,11 @@ public class InvokeMessageImpl extends BaseMessage implements InvokeMessage<Obje
     private Map<String, String> headers;
 
     public InvokeMessageImpl() {
+        this(null);
+    }
+
+    public InvokeMessageImpl(String id) {
+        super(id);
         parameters = new HashMap<>();
         headers = new HashMap<>();
     }

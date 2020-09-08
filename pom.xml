@@ -24,6 +24,8 @@
 
     <properties>
         <version.lombok>1.18.12</version.lombok>
+        <version.junit>4.13</version.junit>
+        <version.logback>1.2.3</version.logback>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -31,6 +33,17 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${version.lombok}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${version.logback}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${version.junit}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

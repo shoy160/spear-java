@@ -12,10 +12,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author shay
  * @date 2020/9/4
  */
-public abstract class AbstractServiceClientFactory implements ServiceClientFactory {
+public abstract class BaseServiceClientFactory implements ServiceClientFactory {
     private final ConcurrentHashMap<ServiceAddress, ServiceClient> clients;
 
-    protected AbstractServiceClientFactory() {
+    protected BaseServiceClientFactory() {
         clients = new ConcurrentHashMap<>();
     }
 

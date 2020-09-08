@@ -5,9 +5,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author shay
@@ -42,6 +40,16 @@ public class CommonUtils {
         return !isEmpty(object);
     }
 
+    public static <T> T cast(Object obj, Class<T> clazz) {
+        if (obj == null) {
+            return null;
+        }
+        if (obj.getClass() == clazz) {
+            return clazz.cast(obj);
+        }
+        return clazz.cast(obj);
+    }
+
     public static String fastId() {
         return UUID.randomUUID().toString();
     }
@@ -56,7 +64,8 @@ public class CommonUtils {
             if (isEmpty(typeArguments) || typeArguments.length <= index) {
                 return null;
             }
-            return (Class<T>) typeArguments[index];
+            Type type = typeArguments[index];
+            return (Class<T>) type;
         } catch (Exception ex) {
             ex.printStackTrace();
             return null;

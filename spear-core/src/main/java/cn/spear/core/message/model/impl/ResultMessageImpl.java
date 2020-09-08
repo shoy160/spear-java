@@ -16,6 +16,11 @@ public class ResultMessageImpl extends BaseMessage implements ResultMessage<Obje
     private Object content;
 
     public ResultMessageImpl() {
+        this(null);
+    }
+
+    public ResultMessageImpl(String id) {
+        super(id);
     }
 
     public ResultMessageImpl(String message, int code) {

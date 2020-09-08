@@ -2,6 +2,7 @@ package cn.spear.core.message.model;
 
 import cn.spear.core.util.CommonUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -38,6 +39,27 @@ public interface InvokeMessage<T> extends Message {
     void setParameters(Map<String, T> parameters);
 
     /**
+     * 添加参数
+     *
+     * @param key   key
+     * @param value value
+     */
+    default void addParameter(String key, T value) {
+        Map<String, T> parameters = this.getParameters();
+        if (parameters == null) {
+            parameters = new HashMap<>(1);
+            parameters.put(key, value);
+            this.setParameters(parameters);
+            return;
+        }
+        if (parameters.containsKey(key)) {
+            parameters.replace(key, value);
+        } else {
+            parameters.put(key, value);
+        }
+    }
+
+    /**
      * 获取header
      *
      * @return map
@@ -50,6 +72,27 @@ public interface InvokeMessage<T> extends Message {
      * @param headers 请求头
      */
     void setHeaders(Map<String, String> headers);
+
+    /**
+     * 添加Header
+     *
+     * @param key   key
+     * @param value value
+     */
+    default void addHeader(String key, String value) {
+        Map<String, String> headers = this.getHeaders();
+        if (headers == null) {
+            headers = new HashMap<>(1);
+            headers.put(key, value);
+            this.setHeaders(headers);
+        } else {
+            if (headers.containsKey(key)) {
+                headers.replace(key, value);
+            } else {
+                headers.put(key, value);
+            }
+        }
+    }
 
     /**
      * 获取泛型实例

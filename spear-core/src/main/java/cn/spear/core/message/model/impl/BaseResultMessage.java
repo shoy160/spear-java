@@ -19,27 +19,23 @@ public class BaseResultMessage<T extends DynamicMessage> extends BaseMessage imp
     public BaseResultMessage() {
     }
 
-    public BaseResultMessage(ResultMessage<?> message) {
-
-    }
-
-    public void setResult(ResultMessageImpl result) {
+    public void initResult(ResultMessageImpl result) {
         this.setId(result.getId());
         this.code = result.getCode();
         this.message = result.getMessage();
         if (result.getContent() != null) {
             this.content = this.createInstance();
-            this.content.setValue(result.getContent());
+            this.content.initValue(result.getContent());
         }
     }
 
-    public ResultMessageImpl getResult() {
+    public ResultMessageImpl result() {
         ResultMessageImpl result = new ResultMessageImpl();
         result.setId(this.getId());
         result.setCode(this.code);
         result.setMessage(this.message);
         if (this.content != null) {
-            result.setContent(this.content.getValue());
+            result.setContent(this.content.value());
         }
         return result;
     }

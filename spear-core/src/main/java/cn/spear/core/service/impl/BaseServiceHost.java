@@ -4,6 +4,7 @@ import cn.spear.core.message.model.impl.BaseMessage;
 import cn.spear.core.message.model.InvokeMessage;
 import cn.spear.core.message.MessageListener;
 import cn.spear.core.message.MessageSender;
+import cn.spear.core.message.model.impl.InvokeMessageImpl;
 import cn.spear.core.service.ServiceExecutor;
 import cn.spear.core.service.ServiceHost;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +19,11 @@ import java.util.HashSet;
  * @date 2020/9/4
  */
 @Slf4j
-public abstract class AbstractServiceHost implements ServiceHost {
+public abstract class BaseServiceHost implements ServiceHost {
     private final ServiceExecutor executor;
     private final Collection<MessageListener> listeners;
 
-    protected AbstractServiceHost(ServiceExecutor executor) {
+    protected BaseServiceHost(ServiceExecutor executor) {
         this.executor = executor;
         this.listeners = new HashSet<>();
         this.listeners.add(this::receivedMessage);
@@ -40,7 +41,7 @@ public abstract class AbstractServiceHost implements ServiceHost {
         if (log.isDebugEnabled()) {
             log.debug("receive:{}", message.toString());
         }
-        executor.execute(sender, (InvokeMessage<?>) message);
+        executor.execute(sender, (InvokeMessageImpl) message);
     }
 
     @Override

@@ -15,5 +15,8 @@ public interface ServiceClientFactory {
      */
     ServiceClient create(ServiceAddress address);
 
+    /**
+     * 关闭
+     */
     void close();
 }

@@ -14,11 +14,10 @@ import cn.spear.core.util.StreamUtils;
  * @author shay
  * @date 2020/9/7
  */
-public abstract class AbstractMessageCodec<TDynamic extends BaseDynamicMessage, TInvoke extends BaseInvokeMessage<?>, TResult extends BaseResultMessage<?>> implements MessageCodec {
+public abstract class BaseMessageCodec<TDynamic extends BaseDynamicMessage, TInvoke extends BaseInvokeMessage<?>, TResult extends BaseResultMessage<?>> implements MessageCodec {
     private final MessageSerializer serializer;
-    private final int gzipLength = 200;
 
-    public AbstractMessageCodec(MessageSerializer serializer) {
+    public BaseMessageCodec(MessageSerializer serializer) {
         this.serializer = serializer;
     }
 
@@ -30,16 +29,16 @@ public abstract class AbstractMessageCodec<TDynamic extends BaseDynamicMessage, 
             return (byte[]) message;
         }
         if (message instanceof InvokeMessageImpl) {
-            TInvoke model = CommonUtils.createGenericInstance(AbstractMessageCodec.class, 1);
+            TInvoke model = CommonUtils.createGenericInstance(getClass(), 1);
             if (model != null) {
-                model.setValue((InvokeMessageImpl) message);
+                model.initMessage((InvokeMessageImpl) message);
                 return this.serializer.serialize(model);
             }
         }
         if (message instanceof ResultMessageImpl) {
-            TResult model = CommonUtils.createGenericInstance(AbstractMessageCodec.class, 2);
+            TResult model = CommonUtils.createGenericInstance(getClass(), 2);
             if (model != null) {
-                model.setResult((ResultMessageImpl) message);
+                model.initResult((ResultMessageImpl) message);
                 return this.serializer.serialize(model);
             }
         }
@@ -51,19 +50,19 @@ public abstract class AbstractMessageCodec<TDynamic extends BaseDynamicMessage, 
         if (CommonUtils.isEmpty(data)) {
             return null;
         }
-        if (type.isAssignableFrom(InvokeMessage.class)) {
-            Class<TInvoke> clazz = CommonUtils.getGenericClass(AbstractMessageCodec.class, 1);
+        if (InvokeMessage.class.isAssignableFrom(type)) {
+            Class<TInvoke> clazz = CommonUtils.getGenericClass(getClass(), 1);
             TInvoke model = this.serializer.deserializeT(data, clazz);
             if (model != null) {
-                return model.getValue();
+                return model.message();
             }
         }
 
-        if (type.isAssignableFrom(ResultMessage.class)) {
-            Class<TResult> clazz = CommonUtils.getGenericClass(AbstractMessageCodec.class, 2);
+        if (ResultMessage.class.isAssignableFrom(type)) {
+            Class<TResult> clazz = CommonUtils.getGenericClass(getClass(), 2);
             TResult model = this.serializer.deserializeT(data, clazz);
             if (model != null) {
-                return model.getResult();
+                return model.result();
             }
         }
         return this.serializer.deserializeNoType(data, type);
@@ -75,6 +74,7 @@ public abstract class AbstractMessageCodec<TDynamic extends BaseDynamicMessage, 
             return new byte[0];
         }
         byte[] buffer = encodeMessage(message);
+        int gzipLength = 200;
         if (gzip && buffer.length > gzipLength) {
             return StreamUtils.gzip(buffer);
         }
