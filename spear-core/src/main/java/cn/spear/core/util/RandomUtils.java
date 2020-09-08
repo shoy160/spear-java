@@ -1,6 +1,7 @@
 package cn.spear.core.util;
 
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * @author shay
@@ -16,5 +17,9 @@ public class RandomUtils {
             sb.append(str.charAt(number));
         }
         return sb.toString();
+    }
+
+    public static String fastId() {
+        return UUID.randomUUID().toString();
     }
 }

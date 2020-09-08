@@ -1,13 +1,12 @@
 package cn.spear.codec.json;
 
 import cn.spear.core.message.MessageSerializer;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 /**
  * Json 消息序列化
@@ -35,10 +34,10 @@ public class JsonMessageSerializer implements MessageSerializer {
     }
 
     @Override
-    public Object deserialize(byte[] data, Class<?> type) {
+    public Object deserialize(byte[] data, Type type) {
         try {
             ObjectMapper mapper = getMapper();
-            return mapper.readValue(data, type);
+            return mapper.readValue(data, (Class<?>) type);
         } catch (IOException ex) {
             ex.printStackTrace();
             return null;

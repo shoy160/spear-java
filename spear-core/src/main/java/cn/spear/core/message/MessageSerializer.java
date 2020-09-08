@@ -1,6 +1,10 @@
 package cn.spear.core.message;
 
-import java.util.Objects;
+
+import cn.spear.core.lang.TypeReference;
+import cn.spear.core.util.CommonUtils;
+
+import java.lang.reflect.Type;
 
 /**
  * 消息序列化
@@ -34,7 +38,7 @@ public interface MessageSerializer {
      * @param type 对象类型
      * @return 对象值
      */
-    Object deserialize(byte[] data, Class<?> type);
+    Object deserialize(byte[] data, Type type);
 
     /**
      * 反序列化匿名数据
@@ -43,7 +47,7 @@ public interface MessageSerializer {
      * @param type 对象类型
      * @return 对象值
      */
-    default Object deserializeNoType(byte[] data, Class<?> type) {
+    default Object deserializeNoType(byte[] data, Type type) {
         return deserialize(data, type);
     }
 
@@ -60,7 +64,18 @@ public interface MessageSerializer {
         if (msg == null) {
             return null;
         }
-        // todo 类型转换
-        return (T) msg;
+        return CommonUtils.cast(msg, type);
+    }
+
+    /**
+     * 反序列化匿名数据
+     *
+     * @param data          byte[]
+     * @param typeReference 对象类型
+     * @param <T>           T
+     * @return 对象值
+     */
+    default <T> T deserializeT(byte[] data, TypeReference<T> typeReference) {
+        return deserializeT(data, (Class<T>) typeReference.getType());
     }
 }

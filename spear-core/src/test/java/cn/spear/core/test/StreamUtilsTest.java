@@ -16,12 +16,10 @@ public class StreamUtilsTest {
 
     @Test
     public void compressTest() {
-        int length = new Random().nextInt(500);
-        byte[] data = RandomUtils.randomString(201).getBytes();
-        log.info("raw length:{}", data.length);
+        int length = new Random().nextInt(5000);
+        byte[] data = RandomUtils.randomString(length).getBytes();
         if (data.length > 200) {
             data = StreamUtils.gzip(data);
-            log.info("gzip compress length:{}", data.length);
         }
         //解压
         boolean isGzip = StreamUtils.isGzip(data);

@@ -1,5 +1,7 @@
 package cn.spear.core.message;
 
+import cn.spear.core.util.CommonUtils;
+
 /**
  * 消息编解码器
  *
@@ -59,6 +61,6 @@ public interface MessageCodec {
         if (message == null) {
             return null;
         }
-        return (T) message;
+        return CommonUtils.cast(message, clazz);
     }
 }

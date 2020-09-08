@@ -2,6 +2,7 @@ package cn.spear.core.message.model.impl;
 
 import cn.spear.core.message.model.Message;
 import cn.spear.core.util.CommonUtils;
+import cn.spear.core.util.RandomUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,7 +23,7 @@ public class BaseMessage implements Message {
 
     public BaseMessage(String id) {
         if (CommonUtils.isEmpty(id)) {
-            this.id = CommonUtils.fastId();
+            this.id = RandomUtils.fastId();
         } else {
             this.id = id;
         }

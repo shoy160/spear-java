@@ -1,6 +1,7 @@
 package cn.spear.core.message.model;
 
 import cn.spear.core.util.CommonUtils;
+import cn.spear.core.util.TypeUtils;
 
 /**
  * @author shay
@@ -55,6 +56,6 @@ public interface ResultMessage<T> extends Message {
      * @return T
      */
     default T createInstance() {
-        return CommonUtils.createGenericInstance(this.getClass());
+        return TypeUtils.createGenericInstance(this.getClass());
     }
 }

@@ -2,6 +2,7 @@ package cn.spear.core.ioc;
 
 import cn.spear.core.lang.Func;
 import cn.spear.core.util.CommonUtils;
+import cn.spear.core.util.TypeUtils;
 import com.sun.corba.se.spi.ior.ObjectKey;
 import lombok.Getter;
 
@@ -52,7 +53,7 @@ public class ServiceDescriptor {
         } else if (null != this.implementationInstance) {
             return this.implementationInstance.getClass();
         } else if (null != this.implementationFactory) {
-            return CommonUtils.getGenericClass(this.implementationFactory.getClass(), 1);
+            return TypeUtils.getGenericClass(this.implementationFactory.getClass(), 1);
         }
         return null;
     }

@@ -7,6 +7,7 @@ import cn.spear.core.message.model.ResultMessage;
 import cn.spear.core.message.model.impl.*;
 import cn.spear.core.util.CommonUtils;
 import cn.spear.core.util.StreamUtils;
+import cn.spear.core.util.TypeUtils;
 
 /**
  * 编解码器抽象类
@@ -29,14 +30,14 @@ public abstract class BaseMessageCodec<TDynamic extends BaseDynamicMessage, TInv
             return (byte[]) message;
         }
         if (message instanceof InvokeMessageImpl) {
-            TInvoke model = CommonUtils.createGenericInstance(getClass(), 1);
+            TInvoke model = TypeUtils.createGenericInstance(getClass(), 1);
             if (model != null) {
                 model.initMessage((InvokeMessageImpl) message);
                 return this.serializer.serialize(model);
             }
         }
         if (message instanceof ResultMessageImpl) {
-            TResult model = CommonUtils.createGenericInstance(getClass(), 2);
+            TResult model = TypeUtils.createGenericInstance(getClass(), 2);
             if (model != null) {
                 model.initResult((ResultMessageImpl) message);
                 return this.serializer.serialize(model);
@@ -51,7 +52,7 @@ public abstract class BaseMessageCodec<TDynamic extends BaseDynamicMessage, TInv
             return null;
         }
         if (InvokeMessage.class.isAssignableFrom(type)) {
-            Class<TInvoke> clazz = CommonUtils.getGenericClass(getClass(), 1);
+            Class<TInvoke> clazz = TypeUtils.getGenericClass(getClass(), 1);
             TInvoke model = this.serializer.deserializeT(data, clazz);
             if (model != null) {
                 return model.message();
@@ -59,7 +60,7 @@ public abstract class BaseMessageCodec<TDynamic extends BaseDynamicMessage, TInv
         }
 
         if (ResultMessage.class.isAssignableFrom(type)) {
-            Class<TResult> clazz = CommonUtils.getGenericClass(getClass(), 2);
+            Class<TResult> clazz = TypeUtils.getGenericClass(getClass(), 2);
             TResult model = this.serializer.deserializeT(data, clazz);
             if (model != null) {
                 return model.result();

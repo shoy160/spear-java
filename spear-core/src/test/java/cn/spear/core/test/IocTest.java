@@ -5,6 +5,7 @@ import cn.spear.core.ioc.ServiceProvider;
 import cn.spear.core.ioc.impl.ServiceCollectionImpl;
 import cn.spear.core.test.model.ServiceDTO;
 import cn.spear.core.util.CommonUtils;
+import cn.spear.core.util.RandomUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ public class IocTest {
         ServiceCollection services = new ServiceCollectionImpl();
         services.addSingleton(ServiceDTO.class, serviceProvider -> {
             ServiceDTO dto = new ServiceDTO();
-            dto.setId(CommonUtils.fastId());
+            dto.setId(RandomUtils.fastId());
             return dto;
         });
         this.provider = services.build();

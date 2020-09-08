@@ -1,11 +1,8 @@
 package cn.spear.core.util;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author shay
@@ -48,44 +45,5 @@ public class CommonUtils {
             return clazz.cast(obj);
         }
         return clazz.cast(obj);
-    }
-
-    public static String fastId() {
-        return UUID.randomUUID().toString();
-    }
-
-    public static <T> Class<T> getGenericClass(Class<?> parentClazz, int index) {
-        try {
-            ParameterizedType genericSuperclass = (ParameterizedType) parentClazz.getGenericSuperclass();
-            if (genericSuperclass == null) {
-                return null;
-            }
-            Type[] typeArguments = genericSuperclass.getActualTypeArguments();
-            if (isEmpty(typeArguments) || typeArguments.length <= index) {
-                return null;
-            }
-            Type type = typeArguments[index];
-            return (Class<T>) type;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
-    public static <T> T createGenericInstance(Class<?> parentClazz) {
-        return createGenericInstance(parentClazz, 0);
-    }
-
-    public static <T> T createGenericInstance(Class<?> parentClazz, int index) {
-        Class<T> clazz = getGenericClass(parentClazz, index);
-        if (clazz == null) {
-            return null;
-        }
-        try {
-            return clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }
