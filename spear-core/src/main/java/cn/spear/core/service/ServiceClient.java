@@ -1,7 +1,7 @@
 package cn.spear.core.service;
 
-import cn.spear.core.message.model.InvokeMessage;
-import cn.spear.core.message.model.ResultMessage;
+import cn.spear.core.message.model.impl.DefaultInvokeMessage;
+import cn.spear.core.message.model.impl.DefaultResultMessage;
 
 /**
  * 服务客户端
@@ -17,7 +17,7 @@ public interface ServiceClient {
      * @param message 消息
      * @return result
      */
-    ResultMessage<?> send(InvokeMessage<?> message);
+    DefaultResultMessage send(DefaultInvokeMessage message);
 
     /**
      * 关闭客户端

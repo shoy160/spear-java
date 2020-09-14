@@ -4,9 +4,9 @@ import cn.spear.core.ioc.ServiceCollection;
 import cn.spear.core.lang.Action;
 import cn.spear.core.message.MessageCodec;
 import cn.spear.core.service.enums.ServiceProtocol;
-import cn.spear.core.service.impl.ServiceEntryFactoryImpl;
-import cn.spear.core.service.impl.ServiceExecutorImpl;
-import cn.spear.core.service.impl.ServiceHostImpl;
+import cn.spear.core.service.impl.DefaultServiceEntryFactory;
+import cn.spear.core.service.impl.DefaultServiceExecutor;
+import cn.spear.core.service.impl.DefaultServiceHost;
 
 /**
  * @author shay
@@ -60,18 +60,18 @@ public interface ServiceBuilder extends ServiceCollection {
      * @return builder
      */
     default ServiceBuilder addSpearServer(Action<ServiceBuilder> action) {
-        addSingleton(ServiceEntryFactory.class, ServiceEntryFactoryImpl.class);
+        addSingleton(ServiceEntryFactory.class, DefaultServiceEntryFactory.class);
         action.invoke(this);
         addSingleton(ServiceExecutor.class, provider -> {
             ServiceEntryFactory entryFactory = provider.getServiceT(ServiceEntryFactory.class);
-            return new ServiceExecutorImpl(entryFactory);
+            return new DefaultServiceExecutor(entryFactory);
         });
         addSingleton(ServiceHost.class, provider -> {
             ServiceExecutor executor = provider.getServiceT(ServiceExecutor.class);
             ServiceRegister register = provider.getServiceT(ServiceRegister.class);
             ServiceEntryFactory entryFactory = provider.getServiceT(ServiceEntryFactory.class);
             ServiceListener listener = provider.getServiceT(ServiceListener.class);
-            return new ServiceHostImpl(executor, register, entryFactory, listener);
+            return new DefaultServiceHost(executor, register, entryFactory, listener);
         });
         return this;
     }
@@ -79,9 +79,11 @@ public interface ServiceBuilder extends ServiceCollection {
     /**
      * 添加Spear客户端
      *
+     * @param action action
      * @return builder
      */
-    default ServiceBuilder addSpearClient() {
+    default ServiceBuilder addSpearClient(Action<ServiceBuilder> action) {
+        action.invoke(this);
         return this;
     }
 }

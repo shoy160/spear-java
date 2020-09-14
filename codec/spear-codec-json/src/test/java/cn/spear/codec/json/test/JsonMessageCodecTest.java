@@ -6,8 +6,8 @@ import cn.spear.codec.json.test.model.UserDTO;
 import cn.spear.codec.json.test.model.UserSearchDTO;
 import cn.spear.core.message.MessageCodec;
 import cn.spear.core.message.MessageSerializer;
-import cn.spear.core.message.model.impl.InvokeMessageImpl;
-import cn.spear.core.message.model.impl.ResultMessageImpl;
+import cn.spear.core.message.model.impl.DefaultInvokeMessage;
+import cn.spear.core.message.model.impl.DefaultResultMessage;
 import cn.spear.core.util.CommonUtils;
 import cn.spear.core.util.RandomUtils;
 import cn.spear.core.util.StreamUtils;
@@ -28,8 +28,7 @@ public class JsonMessageCodecTest {
     private final MessageCodec codec;
 
     public JsonMessageCodecTest() {
-        MessageSerializer serializer = new JsonMessageSerializer();
-        this.codec = new JsonMessageCodec(serializer);
+        this.codec = new JsonMessageCodec();
     }
 
     @Test
@@ -39,14 +38,14 @@ public class JsonMessageCodecTest {
         map.put("age", 20);
         byte[] buffer = codec.encode(map);
         log.info("encode:{}", new String(buffer));
-        Map<?, ?> result = codec.decodeT(buffer, map.getClass());
+        Map<?, ?> result = codec.decodeT(buffer, map.getClass(), true);
         log.info(result.getClass().getTypeName());
         Assert.assertEquals(result.size(), 2);
     }
 
     @Test
     public void invokeMessageTest() {
-        InvokeMessageImpl message = new InvokeMessageImpl(RandomUtils.fastId());
+        DefaultInvokeMessage message = new DefaultInvokeMessage(RandomUtils.fastId());
         message.setServiceId("testService");
         UserSearchDTO searchDTO = new UserSearchDTO();
         searchDTO.setId(1001);
@@ -57,13 +56,13 @@ public class JsonMessageCodecTest {
         message.addHeader("host", "localhost");
         byte[] buffer = codec.encode(message);
         log.info("encode:{}", new String(StreamUtils.unGzip(buffer)));
-        message = codec.decodeT(buffer, InvokeMessageImpl.class);
+        message = codec.decodeT(buffer, DefaultInvokeMessage.class, true);
         Assert.assertEquals(message.getServiceId(), "testService");
     }
 
     @Test
     public void resultMessageTest() {
-        ResultMessageImpl result = new ResultMessageImpl(RandomUtils.fastId());
+        DefaultResultMessage result = new DefaultResultMessage(RandomUtils.fastId());
         result.setCode(200);
         UserDTO dto = new UserDTO();
         dto.setId(1001);
@@ -73,7 +72,7 @@ public class JsonMessageCodecTest {
         result.setContent(dto);
         byte[] buffer = codec.encode(result);
         log.info("encode:{}", new String(StreamUtils.unGzip(buffer)));
-        ResultMessageImpl result1 = codec.decodeT(buffer, ResultMessageImpl.class);
+        DefaultResultMessage result1 = codec.decodeT(buffer, DefaultResultMessage.class, true);
         Assert.assertEquals(200, (int) result1.getCode());
         UserDTO content = CommonUtils.cast(result.getContent(), UserDTO.class);
         Assert.assertEquals(1001, (int) content.getId());

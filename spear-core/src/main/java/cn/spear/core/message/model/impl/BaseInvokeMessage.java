@@ -25,13 +25,13 @@ public class BaseInvokeMessage<T extends DynamicMessage> extends BaseMessage imp
         headers = new HashMap<>();
     }
 
-    public BaseInvokeMessage(InvokeMessageImpl message) {
+    public BaseInvokeMessage(DefaultInvokeMessage message) {
         this();
         this.initMessage(message);
     }
 
 
-    public void initMessage(InvokeMessageImpl message) {
+    public void initMessage(DefaultInvokeMessage message) {
         this.setId(message.getId());
         this.serviceId = message.getServiceId();
         if (CommonUtils.isNotEmpty(message.getParameters())) {
@@ -51,8 +51,8 @@ public class BaseInvokeMessage<T extends DynamicMessage> extends BaseMessage imp
         }
     }
 
-    public InvokeMessageImpl message() {
-        InvokeMessageImpl message = new InvokeMessageImpl();
+    public DefaultInvokeMessage message() {
+        DefaultInvokeMessage message = new DefaultInvokeMessage();
         message.setId(this.getId());
         message.setServiceId(this.serviceId);
         if (CommonUtils.isNotEmpty(this.parameters)) {

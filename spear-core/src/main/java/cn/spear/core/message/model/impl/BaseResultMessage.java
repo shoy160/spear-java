@@ -19,7 +19,7 @@ public class BaseResultMessage<T extends DynamicMessage> extends BaseMessage imp
     public BaseResultMessage() {
     }
 
-    public void initResult(ResultMessageImpl result) {
+    public void initResult(DefaultResultMessage result) {
         this.setId(result.getId());
         this.code = result.getCode();
         this.message = result.getMessage();
@@ -29,8 +29,8 @@ public class BaseResultMessage<T extends DynamicMessage> extends BaseMessage imp
         }
     }
 
-    public ResultMessageImpl result() {
-        ResultMessageImpl result = new ResultMessageImpl();
+    public DefaultResultMessage result() {
+        DefaultResultMessage result = new DefaultResultMessage();
         result.setId(this.getId());
         result.setCode(this.code);
         result.setMessage(this.message);

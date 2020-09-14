@@ -1,6 +1,9 @@
 package cn.spear.core.service.impl;
 
+import cn.spear.core.ioc.IocContext;
 import cn.spear.core.service.*;
+import cn.spear.core.service.enums.ServiceCodec;
+import cn.spear.core.service.enums.ServiceProtocol;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -12,14 +15,17 @@ import java.util.concurrent.Executors;
  * @date 2020/9/8
  */
 @Slf4j
-public class ServiceHostImpl extends BaseServiceHost {
+public class DefaultServiceHost extends BaseServiceHost {
 
     private final ServiceRegister register;
     private final ServiceEntryFactory entryFactory;
     private final ServiceListener listener;
 
-    public ServiceHostImpl(ServiceExecutor executor, ServiceRegister register, ServiceEntryFactory entryFactory, ServiceListener listener) {
-        super(executor);
+    public DefaultServiceHost(
+            ServiceExecutor executor, ServiceRegister register,
+            ServiceEntryFactory entryFactory, ServiceListener listener
+    ) {
+        super(executor, listener);
         this.register = register;
         this.entryFactory = entryFactory;
         this.listener = listener;
@@ -28,8 +34,13 @@ public class ServiceHostImpl extends BaseServiceHost {
     @Override
     public void start(ServiceAddress address) {
         try {
+            ServiceProtocol protocol = IocContext.getServiceT(ServiceProtocol.class);
+            ServiceCodec codec = IocContext.getServiceT(ServiceCodec.class);
+            address.setProtocol(protocol);
+            address.setCodec(codec);
             Thread t = new Thread(() -> listener.start(address));
             t.start();
+            log.info("服务已启动:{},Gzip:{},Codec:{},Protocol:{}", address.toString(), address.getGzip(), address.getCodec(), address.getProtocol());
         } catch (Exception ex) {
             log.error("服务启动失败", ex);
         }
@@ -39,8 +50,9 @@ public class ServiceHostImpl extends BaseServiceHost {
     }
 
     @Override
-    public void stop() {
+    public void close() throws Exception {
         this.register.deregist();
-        this.listener.stop();
+        this.listener.close();
+        log.info("服务已停止");
     }
 }

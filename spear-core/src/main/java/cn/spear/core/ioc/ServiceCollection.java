@@ -127,6 +127,6 @@ public interface ServiceCollection {
      * @return provider
      */
     default ServiceProvider build() {
-        return new ServiceProviderImpl(this.getDescriptors());
+        return IocContext.provider = new ServiceProviderImpl(this.getDescriptors());
     }
 }

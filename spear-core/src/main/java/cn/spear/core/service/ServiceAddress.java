@@ -5,7 +5,10 @@ import cn.spear.core.service.enums.ServiceProtocol;
 import cn.spear.core.util.CommonUtils;
 import lombok.Getter;
 import lombok.Setter;
+import sun.net.util.IPAddressUtil;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.Objects;
 
 /**
@@ -30,6 +33,10 @@ public class ServiceAddress {
      */
     private String service;
     /**
+     * 对外注册的服务端口
+     */
+    private Integer servicePort = this.port;
+    /**
      * 权重
      */
     private Integer weight;
@@ -52,12 +59,23 @@ public class ServiceAddress {
         this();
         this.host = host;
         this.port = port;
+        this.servicePort = port;
     }
 
     @Override
     public String toString() {
         String service = CommonUtils.isEmpty(this.service) ? this.host : this.service;
-        return String.format("%s://%s:%d", this.protocol.toString().toLowerCase(), service, this.port);
+        Integer port = this.servicePort == null || this.servicePort <= 0 ? this.port : this.servicePort;
+        return String.format("%s://%s:%d", this.protocol.toString().toLowerCase(), service, port);
+    }
+
+    public SocketAddress getClientAddress() {
+        String service = CommonUtils.isEmpty(this.service) ? this.host : this.service;
+        return new InetSocketAddress(service, this.servicePort);
+    }
+
+    public SocketAddress getServerAddress() {
+        return new InetSocketAddress(this.host, this.port);
     }
 
     @Override

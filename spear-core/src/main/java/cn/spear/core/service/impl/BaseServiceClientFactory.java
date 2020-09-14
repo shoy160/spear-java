@@ -37,6 +37,10 @@ public abstract class BaseServiceClientFactory implements ServiceClientFactory {
         return client;
     }
 
+    protected void removeClient(ServiceAddress address) {
+        this.clients.remove(address);
+    }
+
     @Override
     public void close() {
         for (ServiceClient client : clients.values()) {

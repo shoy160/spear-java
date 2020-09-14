@@ -49,6 +49,10 @@ public interface MessageCodec {
         return decode(data, clazz, true);
     }
 
+    default <T> T decodeT(byte[] data, Class<T> clazz) {
+        return decodeT(data, clazz, true);
+    }
+
     /**
      * 消息解码
      *
@@ -56,8 +60,8 @@ public interface MessageCodec {
      * @param clazz 类型
      * @return Object
      */
-    default <T> T decodeT(byte[] data, Class<T> clazz) {
-        Object message = decode(data, clazz, true);
+    default <T> T decodeT(byte[] data, Class<T> clazz, boolean gzip) {
+        Object message = decode(data, clazz, gzip);
         if (message == null) {
             return null;
         }

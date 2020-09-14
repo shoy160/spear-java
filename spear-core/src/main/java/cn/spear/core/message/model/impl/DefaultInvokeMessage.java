@@ -13,16 +13,16 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class InvokeMessageImpl extends BaseMessage implements InvokeMessage<Object> {
+public class DefaultInvokeMessage extends BaseMessage implements InvokeMessage<Object> {
     private String serviceId;
     private Map<String, Object> parameters;
     private Map<String, String> headers;
 
-    public InvokeMessageImpl() {
+    public DefaultInvokeMessage() {
         this(null);
     }
 
-    public InvokeMessageImpl(String id) {
+    public DefaultInvokeMessage(String id) {
         super(id);
         parameters = new HashMap<>();
         headers = new HashMap<>();

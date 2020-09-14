@@ -37,7 +37,7 @@ public class ServiceProviderImpl implements ServiceProvider {
                     service = descriptor.getImplementationFactory().invoke(this);
                 } else if (null != descriptor.getImplementationType()) {
                     try {
-                        service = descriptor.getImplementationType().getClass().newInstance();
+                        service = ((Class<?>) descriptor.getImplementationType()).newInstance();
                     } catch (InstantiationException | IllegalAccessException e) {
                         e.printStackTrace();
                     }

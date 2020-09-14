@@ -10,20 +10,20 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ResultMessageImpl extends BaseMessage implements ResultMessage<Object> {
+public class DefaultResultMessage extends BaseMessage implements ResultMessage<Object> {
     private Integer code;
     private String message;
     private Object content;
 
-    public ResultMessageImpl() {
+    public DefaultResultMessage() {
         this(null);
     }
 
-    public ResultMessageImpl(String id) {
+    public DefaultResultMessage(String id) {
         super(id);
     }
 
-    public ResultMessageImpl(String message, int code) {
+    public DefaultResultMessage(String message, int code) {
         this.code = code;
         this.message = message;
     }

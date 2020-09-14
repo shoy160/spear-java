@@ -1,16 +1,13 @@
 package cn.spear.core.service.impl;
 
-import cn.spear.core.message.model.impl.BaseMessage;
-import cn.spear.core.message.model.InvokeMessage;
-import cn.spear.core.message.MessageListener;
 import cn.spear.core.message.MessageSender;
-import cn.spear.core.message.model.impl.InvokeMessageImpl;
+import cn.spear.core.message.model.InvokeMessage;
+import cn.spear.core.message.model.impl.BaseMessage;
+import cn.spear.core.message.model.impl.DefaultInvokeMessage;
 import cn.spear.core.service.ServiceExecutor;
 import cn.spear.core.service.ServiceHost;
+import cn.spear.core.service.ServiceListener;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Collection;
-import java.util.HashSet;
 
 /**
  * 服务主机抽象类
@@ -21,17 +18,16 @@ import java.util.HashSet;
 @Slf4j
 public abstract class BaseServiceHost implements ServiceHost {
     private final ServiceExecutor executor;
-    private final Collection<MessageListener> listeners;
+    private final ServiceListener listener;
 
-    protected BaseServiceHost(ServiceExecutor executor) {
+    protected BaseServiceHost(ServiceExecutor executor, ServiceListener listener) {
         this.executor = executor;
-        this.listeners = new HashSet<>();
-        this.listeners.add(this::receivedMessage);
+        this.listener = listener;
+        this.listener.addListener(event -> receivedMessage(event.getSender(), event.getMessage()));
     }
 
-    @Override
-    public void addListener(MessageListener listener) {
-        listeners.add(listener);
+    protected ServiceListener getListener() {
+        return this.listener;
     }
 
     private void receivedMessage(MessageSender sender, BaseMessage message) {
@@ -41,13 +37,6 @@ public abstract class BaseServiceHost implements ServiceHost {
         if (log.isDebugEnabled()) {
             log.debug("receive:{}", message.toString());
         }
-        executor.execute(sender, (InvokeMessageImpl) message);
-    }
-
-    @Override
-    public void received(MessageSender sender, BaseMessage message) {
-        for (MessageListener listener : listeners) {
-            listener.received(sender, message);
-        }
+        executor.execute(sender, (DefaultInvokeMessage) message);
     }
 }

@@ -2,8 +2,8 @@ package cn.spear.core.service.impl;
 
 import cn.spear.core.message.MessageSender;
 import cn.spear.core.message.model.impl.BaseMessage;
-import cn.spear.core.message.model.impl.InvokeMessageImpl;
-import cn.spear.core.message.model.impl.ResultMessageImpl;
+import cn.spear.core.message.model.impl.DefaultInvokeMessage;
+import cn.spear.core.message.model.impl.DefaultResultMessage;
 import cn.spear.core.service.ServiceEntry;
 import cn.spear.core.service.ServiceEntryFactory;
 import cn.spear.core.service.ServiceExecutor;
@@ -16,22 +16,22 @@ import java.util.concurrent.*;
  * @date 2020/9/8
  */
 @Slf4j
-public class ServiceExecutorImpl implements ServiceExecutor {
+public class DefaultServiceExecutor implements ServiceExecutor {
 
     private final ServiceEntryFactory entryFactory;
     private final ExecutorService fixedThreadPool;
 
-    public ServiceExecutorImpl(ServiceEntryFactory entryFactory) {
+    public DefaultServiceExecutor(ServiceEntryFactory entryFactory) {
         this.entryFactory = entryFactory;
         fixedThreadPool = Executors.newCachedThreadPool();
     }
 
-    private void localExecute(ServiceEntry entry, InvokeMessageImpl invokeMessage, ResultMessageImpl resultMessage) {
+    private void localExecute(ServiceEntry entry, DefaultInvokeMessage invokeMessage, DefaultResultMessage resultMessage) {
         try {
             if (entry.isNotify()) {
-                entry.getInvoke().apply(invokeMessage.getParameters());
+                entry.getInvoke().invoke(invokeMessage.getParameters());
             } else {
-                Object result = entry.getInvoke().apply(invokeMessage.getParameters());
+                Object result = entry.getInvoke().invoke(invokeMessage.getParameters());
                 resultMessage.setContent(result);
             }
         } catch (Exception ex) {
@@ -51,13 +51,13 @@ public class ServiceExecutorImpl implements ServiceExecutor {
     }
 
     @Override
-    public void execute(MessageSender sender, InvokeMessageImpl message) {
+    public void execute(MessageSender sender, DefaultInvokeMessage message) {
         ServiceEntry entry = this.entryFactory.find(message.getServiceId());
         if (null == entry) {
-            send(sender, message.getId(), new ResultMessageImpl("服务未找到", 404));
+            send(sender, message.getId(), new DefaultResultMessage("服务未找到", 404));
             return;
         }
-        ResultMessageImpl result = new ResultMessageImpl();
+        DefaultResultMessage result = new DefaultResultMessage();
         if (entry.isNotify()) {
             send(sender, message.getId(), result);
             this.fixedThreadPool.execute(() -> localExecute(entry, message, result));

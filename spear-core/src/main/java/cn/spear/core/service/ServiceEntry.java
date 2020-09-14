@@ -5,8 +5,6 @@ import lombok.Setter;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Map;
-import java.util.function.Function;
 
 /**
  * 服务条目
@@ -20,12 +18,11 @@ public class ServiceEntry {
     private final Method method;
     private final Parameter[] parameters;
     private final boolean notify;
-    private Function<Map<String, Object>, Object> invoke;
+    private ServiceInvoke invoke;
 
     public ServiceEntry(Method method) {
         this.method = method;
         this.notify = method.getReturnType() == void.class;
         this.parameters = method.getParameters();
     }
-
 }

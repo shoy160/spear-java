@@ -29,17 +29,17 @@ public abstract class BaseMessageCodec<TDynamic extends BaseDynamicMessage, TInv
         if (message instanceof byte[]) {
             return (byte[]) message;
         }
-        if (message instanceof InvokeMessageImpl) {
+        if (message instanceof DefaultInvokeMessage) {
             TInvoke model = TypeUtils.createGenericInstance(getClass(), 1);
             if (model != null) {
-                model.initMessage((InvokeMessageImpl) message);
+                model.initMessage((DefaultInvokeMessage) message);
                 return this.serializer.serialize(model);
             }
         }
-        if (message instanceof ResultMessageImpl) {
+        if (message instanceof DefaultResultMessage) {
             TResult model = TypeUtils.createGenericInstance(getClass(), 2);
             if (model != null) {
-                model.initResult((ResultMessageImpl) message);
+                model.initResult((DefaultResultMessage) message);
                 return this.serializer.serialize(model);
             }
         }
