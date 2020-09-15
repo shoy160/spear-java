@@ -1,8 +1,8 @@
-package cn.spear.simple.service;
+package cn.spear.simple.contract;
+
 
 import cn.spear.core.service.annotation.SpearService;
-import cn.spear.simple.dto.UserDTO;
-import cn.spear.simple.dto.UserSearchDTO;
+import cn.spear.simple.contract.dto.*;
 
 import java.util.List;
 

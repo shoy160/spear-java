@@ -1,4 +1,4 @@
-package cn.spear.simple.dto;
+package cn.spear.simple.contract.dto;
 
 /**
  * @author shay

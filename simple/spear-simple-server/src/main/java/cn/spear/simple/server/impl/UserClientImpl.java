@@ -1,9 +1,7 @@
-package cn.spear.simple.service.impl;
+package cn.spear.simple.server.impl;
 
-import cn.spear.simple.dto.UserDTO;
-import cn.spear.simple.dto.UserGender;
-import cn.spear.simple.dto.UserSearchDTO;
-import cn.spear.simple.service.UserClient;
+import cn.spear.simple.contract.UserClient;
+import cn.spear.simple.contract.dto.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;

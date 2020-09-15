@@ -9,9 +9,8 @@ import cn.spear.core.service.enums.ServiceProtocol;
 import cn.spear.core.service.impl.DefaultServiceBuilder;
 import cn.spear.core.service.impl.DefaultServiceRouter;
 import cn.spear.protocol.tcp.TcpClientFactory;
-import cn.spear.simple.dto.UserDTO;
-import cn.spear.simple.dto.UserSearchDTO;
-import cn.spear.simple.service.UserClient;
+import cn.spear.simple.contract.UserClient;
+import cn.spear.simple.contract.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -12,7 +12,6 @@
         <module>protocols</module>
         <module>codec</module>
         <module>simple</module>
-        <module>spear-proxy</module>
         <module>spear-nacos</module>
         <module>spear-redis</module>
         <module>spear-consul</module>

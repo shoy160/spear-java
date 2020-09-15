@@ -1,4 +1,4 @@
-package cn.spear.simple;
+package cn.spear.simple.server;
 
 import cn.spear.codec.json.JsonMessageCodec;
 import cn.spear.core.ioc.ServiceProvider;
