@@ -48,7 +48,7 @@ public class TcpServiceListener extends DefaultMessageListener implements Servic
                         channel.pipeline()
                                 .addLast(new LengthFieldPrepender(4))
                                 .addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4))
-                                .addLast(new MessageHandler<DefaultInvokeMessage>(codec, address.getGzip()))
+                                .addLast(new MessageHandler<>(codec, address.getGzip(), DefaultInvokeMessage.class))
                                 .addLast(new SimpleChannelInboundHandler<DefaultInvokeMessage>() {
                                     @Override
                                     protected void channelRead0(ChannelHandlerContext context, DefaultInvokeMessage invokeMessage) {

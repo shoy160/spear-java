@@ -18,8 +18,9 @@ public class ServiceCollectionImpl implements ServiceCollection {
     }
 
     @Override
-    public void add(ServiceDescriptor descriptor) {
+    public ServiceCollection add(ServiceDescriptor descriptor) {
         descriptors.add(descriptor);
+        return this;
     }
 
     @Override

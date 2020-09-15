@@ -17,8 +17,9 @@ public interface ServiceCollection {
      * 添加服务
      *
      * @param descriptor descriptor
+     * @return services
      */
-    void add(ServiceDescriptor descriptor);
+    ServiceCollection add(ServiceDescriptor descriptor);
 
     /**
      * 获取服务描述

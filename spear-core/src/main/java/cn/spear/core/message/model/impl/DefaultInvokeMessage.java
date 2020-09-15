@@ -15,6 +15,7 @@ import java.util.Map;
 @Setter
 public class DefaultInvokeMessage extends BaseMessage implements InvokeMessage<Object> {
     private String serviceId;
+    private Boolean notify;
     private Map<String, Object> parameters;
     private Map<String, String> headers;
 
@@ -26,5 +27,15 @@ public class DefaultInvokeMessage extends BaseMessage implements InvokeMessage<O
         super(id);
         parameters = new HashMap<>();
         headers = new HashMap<>();
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "serviceId='" + this.serviceId + '\'' +
+                ", notify='" + this.notify + '\'' +
+                ", parameters=" + this.parameters +
+                ", headers=" + this.headers +
+                '}';
     }
 }

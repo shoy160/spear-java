@@ -1,6 +1,7 @@
 package cn.spear.core.util;
 
 import cn.spear.core.lang.Func;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
@@ -21,6 +22,8 @@ import java.util.jar.JarFile;
  * @date 2020/9/8
  */
 public class TypeUtils {
+    private static Logger logger = LoggerFactory.getLogger(TypeUtils.class);
+
     public static ParameterizedType toParameterizedType(Type type) {
         ParameterizedType result = null;
         if (type instanceof ParameterizedType) {
@@ -184,7 +187,7 @@ public class TypeUtils {
             pack = "";
         }
         if (clazzCache.containsKey(pack)) {
-            LoggerFactory.getLogger(TypeUtils.class).info("load pack[{}] classes from cache", pack);
+            logger.info("load pack[{}] classes from cache", pack);
             return clazzCache.get(pack);
         }
         // 第一个class类的集合
@@ -226,6 +229,7 @@ public class TypeUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        logger.info("find {} classes for pack[{}]", classes.size(), pack);
         clazzCache.putIfAbsent(pack, classes);
         return classes;
     }

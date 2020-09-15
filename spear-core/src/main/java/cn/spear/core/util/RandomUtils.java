@@ -8,6 +8,12 @@ import java.util.UUID;
  * @date 2020/9/8
  */
 public class RandomUtils {
+
+    public static int randomInteger(int max) {
+        Random random = new Random();
+        return random.nextInt(max);
+    }
+
     public static String randomString(int length) {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();

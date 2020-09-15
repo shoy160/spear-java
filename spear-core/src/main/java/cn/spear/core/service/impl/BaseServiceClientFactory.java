@@ -29,10 +29,11 @@ public abstract class BaseServiceClientFactory implements ServiceClientFactory {
 
     @Override
     public ServiceClient create(ServiceAddress address) {
+//        return createClient(address);
         ServiceClient client = clients.get(address);
         if (client == null) {
             client = createClient(address);
-            client = clients.putIfAbsent(address, client);
+            clients.putIfAbsent(address, client);
         }
         return client;
     }
@@ -42,7 +43,7 @@ public abstract class BaseServiceClientFactory implements ServiceClientFactory {
     }
 
     @Override
-    public void close() {
+    public void close() throws Exception {
         for (ServiceClient client : clients.values()) {
             client.close();
         }

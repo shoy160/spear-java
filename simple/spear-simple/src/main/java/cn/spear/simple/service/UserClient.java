@@ -1,6 +1,10 @@
 package cn.spear.simple.service;
 
 import cn.spear.core.service.annotation.SpearService;
+import cn.spear.simple.dto.UserDTO;
+import cn.spear.simple.dto.UserSearchDTO;
+
+import java.util.List;
 
 /**
  * @author shay
@@ -30,4 +34,13 @@ public interface UserClient {
      * @param age age
      */
     void add(int age);
+
+    /**
+     * 搜索
+     *
+     * @param dto dto
+     * @return list
+     */
+    @SpearService(route = "search")
+    List<UserDTO> search(UserSearchDTO dto);
 }

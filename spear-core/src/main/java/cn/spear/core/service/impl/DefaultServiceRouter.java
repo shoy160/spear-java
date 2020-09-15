@@ -33,6 +33,7 @@ public class DefaultServiceRouter implements ServiceRegister, ServiceFinder {
 
     @Override
     public void clean(Class<?> serviceClazz) {
+        serviceCache.remove(serviceClazz);
     }
 
     @Override

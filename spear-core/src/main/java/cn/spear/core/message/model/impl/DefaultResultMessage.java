@@ -15,8 +15,13 @@ public class DefaultResultMessage extends BaseMessage implements ResultMessage<O
     private String message;
     private Object content;
 
+    public boolean success() {
+        return this.code == 200;
+    }
+
     public DefaultResultMessage() {
         this(null);
+        this.code = 200;
     }
 
     public DefaultResultMessage(String id) {
@@ -26,5 +31,14 @@ public class DefaultResultMessage extends BaseMessage implements ResultMessage<O
     public DefaultResultMessage(String message, int code) {
         this.code = code;
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "DefaultResultMessage{" +
+                "code=" + code +
+                ", message='" + message + '\'' +
+                ", content=" + content +
+                '}';
     }
 }

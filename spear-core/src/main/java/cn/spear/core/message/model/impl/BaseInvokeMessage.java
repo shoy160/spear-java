@@ -17,6 +17,7 @@ import java.util.Map;
 @Setter
 public class BaseInvokeMessage<T extends DynamicMessage> extends BaseMessage implements InvokeMessage<T> {
     private String serviceId;
+    private Boolean notify;
     private Map<String, T> parameters;
     private Map<String, String> headers;
 
@@ -34,6 +35,7 @@ public class BaseInvokeMessage<T extends DynamicMessage> extends BaseMessage imp
     public void initMessage(DefaultInvokeMessage message) {
         this.setId(message.getId());
         this.serviceId = message.getServiceId();
+        this.notify = message.getNotify();
         if (CommonUtils.isNotEmpty(message.getParameters())) {
             for (String key : message.getParameters().keySet()) {
                 T item = createInstance();
@@ -55,6 +57,7 @@ public class BaseInvokeMessage<T extends DynamicMessage> extends BaseMessage imp
         DefaultInvokeMessage message = new DefaultInvokeMessage();
         message.setId(this.getId());
         message.setServiceId(this.serviceId);
+        message.setNotify(this.notify);
         if (CommonUtils.isNotEmpty(this.parameters)) {
             Map<String, Object> parameters = new HashMap<>(this.parameters.size());
             for (String key : this.parameters.keySet()) {

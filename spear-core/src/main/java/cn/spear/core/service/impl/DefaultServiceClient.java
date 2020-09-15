@@ -13,6 +13,8 @@ import cn.spear.core.service.ServiceExecutor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.channels.CompletionHandler;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.CompletionStage;
@@ -22,23 +24,23 @@ import java.util.concurrent.CompletionStage;
  * @date 2020/9/14
  */
 @Slf4j
-public class DefaultServiceClient implements ServiceClient, AutoCloseable {
+public class DefaultServiceClient implements ServiceClient {
     private final MessageSender sender;
     private final MessageListener listener;
-    private final ServiceExecutor executor;
+    private final Map<String, DefaultResultMessage> receiveMap;
 
     public DefaultServiceClient(MessageSender sender, MessageListener listener, ServiceExecutor executor) {
         this.sender = sender;
         this.listener = listener;
-        this.executor = executor;
-        this.listener.addListener(new MessageListener() {
-            @Override
-            public void onReceived(MessageEvent event) {
-                BaseMessage message = event.getMessage();
-                log.info("client receive:{}", message.toString());
-                if (null != executor && message instanceof DefaultInvokeMessage) {
-                    executor.execute(event.getSender(), (DefaultInvokeMessage) message);
-                }
+        receiveMap = new HashMap<>();
+        this.listener.addListener(event -> {
+            BaseMessage message = event.getMessage();
+            log.info("client receive:{}", message.toString());
+            if (message instanceof DefaultResultMessage) {
+                receiveMap.put(message.getId(), (DefaultResultMessage) message);
+            }
+            if (null != executor && message instanceof DefaultInvokeMessage) {
+                executor.execute(event.getSender(), (DefaultInvokeMessage) message);
             }
         });
     }
@@ -46,20 +48,32 @@ public class DefaultServiceClient implements ServiceClient, AutoCloseable {
     @Override
     public DefaultResultMessage send(DefaultInvokeMessage message) {
         this.sender.send(message);
-        return null;
+        if (message.getNotify()) {
+            return new DefaultResultMessage();
+        }
+        while (true) {
+            if (receiveMap.containsKey(message.getId())) {
+                DefaultResultMessage result = receiveMap.get(message.getId());
+                receiveMap.remove(message.getId());
+                return result;
+            } else {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
-    public void close() {
-        try {
-            if (sender instanceof AutoCloseable) {
-                ((AutoCloseable) sender).close();
-            }
-            if (listener instanceof AutoCloseable) {
-                ((AutoCloseable) listener).close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void close() throws Exception {
+        if (sender instanceof AutoCloseable) {
+            ((AutoCloseable) sender).close();
         }
+        if (listener instanceof AutoCloseable) {
+            ((AutoCloseable) listener).close();
+        }
+        log.info("client closed");
     }
 }

@@ -1,7 +1,11 @@
 package cn.spear.core.util;
 
-import java.util.Arrays;
-import java.util.Objects;
+import cn.spear.core.lang.Weight;
+import cn.spear.core.service.ServiceAddress;
+
+import java.util.*;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * @author shay
@@ -47,5 +51,83 @@ public class ArrayUtils {
             }
         }
         return false;
+    }
+
+    private static <T> void swap(T[] a, int i, int j) {
+        T temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+
+    public static <T> void randomSort(T[] arr) {
+        if (CommonUtils.isEmpty(arr) || arr.length <= 1) {
+            return;
+        }
+        int length = arr.length;
+        Random rand = new Random();
+        for (int i = length; i > 0; i--) {
+            int randInd = rand.nextInt(i);
+            swap(arr, randInd, i - 1);
+        }
+    }
+
+    public static <T> T random(T[] arr) {
+        if (CommonUtils.isEmpty(arr)) {
+            return null;
+        }
+        if (arr.length == 1) {
+            return arr[0];
+        }
+        randomSort(arr);
+        return arr[0];
+    }
+
+    /**
+     * 权重随机
+     *
+     * @param iterable list
+     * @param <T>      T
+     * @return T
+     */
+    public static <T extends Weight> T randomWeight(Iterable<T> iterable) {
+        if (CommonUtils.isEmpty(iterable)) {
+            return null;
+        }
+        int total = 0;
+        for (T t : iterable) {
+            total += t.getWeight();
+        }
+        int randomIdx = RandomUtils.randomInteger(total);
+        total = 0;
+        for (T t : iterable) {
+            total += t.getWeight();
+            if (total > randomIdx) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 权重随机
+     *
+     * @param array array
+     * @param <T>   T
+     * @return T
+     */
+    public static <T extends Weight> T randomWeight(T[] array) {
+        int total = 0;
+        for (T t : array) {
+            total += t.getWeight();
+        }
+        int randomIdx = RandomUtils.randomInteger(total);
+        total = 0;
+        for (T t : array) {
+            total += t.getWeight();
+            if (total > randomIdx) {
+                return t;
+            }
+        }
+        return random(array);
     }
 }

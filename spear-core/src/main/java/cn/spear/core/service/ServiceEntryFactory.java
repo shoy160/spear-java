@@ -26,14 +26,6 @@ public interface ServiceEntryFactory {
     List<Class<?>> getServices();
 
     /**
-     * 获取服务条目Id
-     *
-     * @param method method
-     * @return serviceId
-     */
-    String getServiceId(Method method);
-
-    /**
      * 查找服务条目
      *
      * @param serviceId 服务条目ID

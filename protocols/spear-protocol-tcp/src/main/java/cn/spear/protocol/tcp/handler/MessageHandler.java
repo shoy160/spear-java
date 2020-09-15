@@ -16,18 +16,19 @@ public class MessageHandler<T extends BaseMessage> extends SimpleChannelInboundH
 
     private final MessageCodec codec;
     private final boolean gzip;
+    private final Class<T> clazz;
 
-    public MessageHandler(MessageCodec codec, boolean gzip) {
+    public MessageHandler(MessageCodec codec, boolean gzip, Class<T> clazz) {
         this.codec = codec;
         this.gzip = gzip;
+        this.clazz = clazz;
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext context, ByteBuf buffer) throws Exception {
         byte[] data = new byte[buffer.readableBytes()];
         buffer.readBytes(data);
-        Class<T> clazz = TypeUtils.getGenericClass(getClass(), 0);
-        T serviceMsg = this.codec.decodeT(data, clazz, this.gzip);
+        T serviceMsg = this.codec.decodeT(data, this.clazz, this.gzip);
         context.fireChannelRead(serviceMsg);
         ReferenceCountUtil.release(buffer);
     }

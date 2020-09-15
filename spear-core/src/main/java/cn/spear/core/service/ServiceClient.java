@@ -9,7 +9,7 @@ import cn.spear.core.message.model.impl.DefaultResultMessage;
  * @author shay
  * @date 2020/9/4
  */
-public interface ServiceClient {
+public interface ServiceClient extends AutoCloseable {
 
     /**
      * 发送消息
@@ -18,9 +18,4 @@ public interface ServiceClient {
      * @return result
      */
     DefaultResultMessage send(DefaultInvokeMessage message);
-
-    /**
-     * 关闭客户端
-     */
-    void close();
 }

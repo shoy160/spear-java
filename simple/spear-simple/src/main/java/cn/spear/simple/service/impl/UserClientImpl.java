@@ -1,7 +1,14 @@
 package cn.spear.simple.service.impl;
 
+import cn.spear.simple.dto.UserDTO;
+import cn.spear.simple.dto.UserGender;
+import cn.spear.simple.dto.UserSearchDTO;
 import cn.spear.simple.service.UserClient;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author shay
@@ -32,5 +39,17 @@ public class UserClientImpl implements UserClient {
             e.printStackTrace();
         }
         log.info("add age:{}", age);
+    }
+
+    private static List<UserDTO> datasource = new ArrayList<>(Arrays.asList(new UserDTO[]{
+            UserDTO.builder().id(1).name("name01").role(0).gender(UserGender.Female).build(),
+            UserDTO.builder().id(2).name("name02").role(2).gender(UserGender.Male).build(),
+            UserDTO.builder().id(3).name("name03").role(2).gender(UserGender.Female).build(),
+            UserDTO.builder().id(4).name("name04").role(0).gender(UserGender.Male).build()
+    }));
+
+    @Override
+    public List<UserDTO> search(UserSearchDTO dto) {
+        return datasource;
     }
 }

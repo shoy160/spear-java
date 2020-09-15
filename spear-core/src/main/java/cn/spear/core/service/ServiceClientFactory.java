@@ -6,7 +6,7 @@ package cn.spear.core.service;
  * @author shay
  * @date 2020/9/4
  */
-public interface ServiceClientFactory {
+public interface ServiceClientFactory extends AutoCloseable {
     /**
      * 创建客户端
      *
@@ -14,9 +14,4 @@ public interface ServiceClientFactory {
      * @return 客户端
      */
     ServiceClient create(ServiceAddress address);
-
-    /**
-     * 关闭
-     */
-    void close();
 }

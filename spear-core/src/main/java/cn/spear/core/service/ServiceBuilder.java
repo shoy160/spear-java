@@ -1,11 +1,15 @@
 package cn.spear.core.service;
 
 import cn.spear.core.ioc.ServiceCollection;
+import cn.spear.core.ioc.ServiceDescriptor;
 import cn.spear.core.lang.Action;
 import cn.spear.core.message.MessageCodec;
+import cn.spear.core.proxy.ProxyFactory;
+import cn.spear.core.proxy.impl.DefaultProxyFactory;
 import cn.spear.core.service.enums.ServiceProtocol;
 import cn.spear.core.service.impl.DefaultServiceEntryFactory;
 import cn.spear.core.service.impl.DefaultServiceExecutor;
+import cn.spear.core.service.impl.DefaultServiceGenerator;
 import cn.spear.core.service.impl.DefaultServiceHost;
 
 /**
@@ -37,6 +41,19 @@ public interface ServiceBuilder extends ServiceCollection {
     /**
      * 添加路由
      *
+     * @param <T>            T
+     * @param routerInstance routeType
+     * @return builder
+     */
+    default <T extends ServiceRegister & ServiceFinder> ServiceBuilder addRoute(T routerInstance) {
+        add(new ServiceDescriptor(ServiceRegister.class, routerInstance));
+        add(new ServiceDescriptor(ServiceFinder.class, routerInstance));
+        return this;
+    }
+
+    /**
+     * 添加路由
+     *
      * @param <TRegister>  registerType
      * @param <TFinder>    finderType
      * @param registerType registerType
@@ -60,7 +77,10 @@ public interface ServiceBuilder extends ServiceCollection {
      * @return builder
      */
     default ServiceBuilder addSpearServer(Action<ServiceBuilder> action) {
-        addSingleton(ServiceEntryFactory.class, DefaultServiceEntryFactory.class);
+        addSingleton(ServiceGenerator.class, DefaultServiceGenerator.class);
+        addSingleton(ServiceEntryFactory.class, p -> {
+            return new DefaultServiceEntryFactory(this);
+        });
         action.invoke(this);
         addSingleton(ServiceExecutor.class, provider -> {
             ServiceEntryFactory entryFactory = provider.getServiceT(ServiceEntryFactory.class);
@@ -83,6 +103,8 @@ public interface ServiceBuilder extends ServiceCollection {
      * @return builder
      */
     default ServiceBuilder addSpearClient(Action<ServiceBuilder> action) {
+        addSingleton(ServiceGenerator.class, DefaultServiceGenerator.class);
+        addSingleton(ProxyFactory.class, DefaultProxyFactory.class);
         action.invoke(this);
         return this;
     }

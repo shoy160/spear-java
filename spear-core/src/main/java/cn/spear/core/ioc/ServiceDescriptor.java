@@ -32,7 +32,7 @@ public class ServiceDescriptor {
         this.implementationType = implementationType;
     }
 
-    public ServiceDescriptor(Type serviceType, ObjectKey instance) {
+    public ServiceDescriptor(Type serviceType, Object instance) {
         this(serviceType, ServiceLifetime.Singleton);
         this.implementationInstance = instance;
     }

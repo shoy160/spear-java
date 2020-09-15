@@ -19,7 +19,6 @@ import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
@@ -43,7 +42,6 @@ public class TcpClientFactory extends BaseServiceClientFactory {
         NioEventLoopGroup group = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
         bootstrap
-                .channel(NioServerSocketChannel.class)
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
@@ -54,7 +52,7 @@ public class TcpClientFactory extends BaseServiceClientFactory {
                         channel.pipeline()
                                 .addLast(new LengthFieldPrepender(4))
                                 .addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4))
-                                .addLast(new MessageHandler<DefaultResultMessage>(codec, gzip))
+                                .addLast(new MessageHandler<>(codec, gzip, DefaultResultMessage.class))
                                 .addLast(new SimpleChannelInboundHandler<DefaultResultMessage>() {
                                     @Override
                                     protected void channelRead0(ChannelHandlerContext context, DefaultResultMessage message) throws Exception {

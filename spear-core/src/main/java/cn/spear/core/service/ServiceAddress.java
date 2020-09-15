@@ -1,11 +1,11 @@
 package cn.spear.core.service;
 
+import cn.spear.core.lang.Weight;
 import cn.spear.core.service.enums.ServiceCodec;
 import cn.spear.core.service.enums.ServiceProtocol;
 import cn.spear.core.util.CommonUtils;
 import lombok.Getter;
 import lombok.Setter;
-import sun.net.util.IPAddressUtil;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -19,7 +19,7 @@ import java.util.Objects;
  */
 @Getter
 @Setter
-public class ServiceAddress {
+public class ServiceAddress implements Weight {
 
     private String host;
     private Integer port;
@@ -67,6 +67,11 @@ public class ServiceAddress {
         String service = CommonUtils.isEmpty(this.service) ? this.host : this.service;
         Integer port = this.servicePort == null || this.servicePort <= 0 ? this.port : this.servicePort;
         return String.format("%s://%s:%d", this.protocol.toString().toLowerCase(), service, port);
+    }
+
+    @Override
+    public int getWeight() {
+        return (this.weight == null || this.weight < 1) ? 1 : this.weight;
     }
 
     public SocketAddress getClientAddress() {
