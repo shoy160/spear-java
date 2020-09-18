@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.JarURLConnection;
@@ -23,6 +24,10 @@ import java.util.jar.JarFile;
  */
 public class TypeUtils {
     private static Logger logger = LoggerFactory.getLogger(TypeUtils.class);
+
+    public static boolean isAbstract(Class<?> clazz) {
+        return Modifier.isAbstract(clazz.getModifiers());
+    }
 
     public static ParameterizedType toParameterizedType(Type type) {
         ParameterizedType result = null;
@@ -174,7 +179,7 @@ public class TypeUtils {
         }
     }
 
-    private static final Map<String, Set<Class<?>>> clazzCache = new HashMap<>();
+    private static final Map<String, Set<Class<?>>> CLAZZ_CACHE = new HashMap<>();
 
     /**
      * 根据包名获取包下面所有的类名
@@ -186,9 +191,9 @@ public class TypeUtils {
         if (null == pack) {
             pack = "";
         }
-        if (clazzCache.containsKey(pack)) {
+        if (CLAZZ_CACHE.containsKey(pack)) {
             logger.info("load pack[{}] classes from cache", pack);
-            return clazzCache.get(pack);
+            return CLAZZ_CACHE.get(pack);
         }
         // 第一个class类的集合
         Set<Class<?>> classes = new LinkedHashSet<>();
@@ -230,7 +235,7 @@ public class TypeUtils {
             e.printStackTrace();
         }
         logger.info("find {} classes for pack[{}]", classes.size(), pack);
-        clazzCache.putIfAbsent(pack, classes);
+        CLAZZ_CACHE.putIfAbsent(pack, classes);
         return classes;
     }
 

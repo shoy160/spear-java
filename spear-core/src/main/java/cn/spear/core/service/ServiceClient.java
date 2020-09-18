@@ -15,7 +15,18 @@ public interface ServiceClient extends AutoCloseable {
      * 发送消息
      *
      * @param message 消息
+     * @param timeout 超时时间(秒)
      * @return result
      */
-    DefaultResultMessage send(DefaultInvokeMessage message);
+    DefaultResultMessage send(DefaultInvokeMessage message, long timeout);
+
+    /**
+     * 发送消息
+     *
+     * @param message 消息
+     * @return result
+     */
+    default DefaultResultMessage send(DefaultInvokeMessage message) {
+        return send(message, -1);
+    }
 }

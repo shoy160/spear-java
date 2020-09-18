@@ -10,7 +10,7 @@ import java.util.List;
  * @author shay
  * @date 2020/9/14
  */
-@SpearService(route = "spear/user")
+@SpearService(service = "simple-service", route = "spear/user")
 public interface UserClient {
     /**
      * Hello

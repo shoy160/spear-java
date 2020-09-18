@@ -19,11 +19,13 @@ public class ClientProxyHandler implements InvocationHandler {
     private final ServiceFinder finder;
     private final ServiceClientFactory clientFactory;
     private final ServiceGenerator serviceGenerator;
+    private final long timeout;
 
-    public ClientProxyHandler() {
+    public ClientProxyHandler(long timeout) {
         this.clientFactory = IocContext.getServiceT(ServiceClientFactory.class);
         this.finder = IocContext.getServiceT(ServiceFinder.class);
         this.serviceGenerator = IocContext.getServiceT(ServiceGenerator.class);
+        this.timeout = timeout;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class ClientProxyHandler implements InvocationHandler {
         }
         ServiceClient client = clientFactory.create(address);
         DefaultInvokeMessage message = this.serviceGenerator.createMessage(method, args);
-        DefaultResultMessage result = client.send(message);
+        DefaultResultMessage result = client.send(message, timeout);
         if (null == result || !result.success()) {
             String error = null == result ? "服务调用异常" : result.getMessage();
             int code = null == result ? 500 : result.getCode();

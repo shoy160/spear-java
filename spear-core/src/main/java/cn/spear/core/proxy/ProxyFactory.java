@@ -25,7 +25,7 @@ public interface ProxyFactory {
      * @return instance
      */
     default Object create(Class<?> clazz) {
-        return create(clazz, new ClientProxyHandler());
+        return create(clazz, new ClientProxyHandler(-1));
     }
 
     /**
@@ -36,7 +36,19 @@ public interface ProxyFactory {
      * @return T
      */
     default <T> T createT(Class<T> clazz) {
-        return createT(clazz, new ClientProxyHandler());
+        return createT(clazz, new ClientProxyHandler(-1));
+    }
+
+    /**
+     * 创建代理
+     *
+     * @param clazz   class
+     * @param timeout 超时时间(秒)
+     * @param <T>     T
+     * @return T
+     */
+    default <T> T createT(Class<T> clazz, long timeout) {
+        return createT(clazz, new ClientProxyHandler(timeout));
     }
 
     /**

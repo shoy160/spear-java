@@ -4,7 +4,7 @@ package cn.spear.core.exception;
  * @author shay
  * @date 2020/9/15
  */
-public class BusiException extends Exception {
+public class BusiException extends RuntimeException {
     private Integer code;
 
     public BusiException() {

@@ -5,9 +5,9 @@ import cn.spear.core.service.ServiceFinder;
 import cn.spear.core.service.ServiceRegister;
 import cn.spear.core.util.CommonUtils;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -17,41 +17,45 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class DefaultServiceRouter implements ServiceRegister, ServiceFinder {
 
-    private final ConcurrentMap<Type, List<ServiceAddress>> serviceCache;
+    private final ConcurrentMap<String, List<ServiceAddress>> serviceCache;
 
     public DefaultServiceRouter() {
         this.serviceCache = new ConcurrentHashMap<>();
     }
 
+    public DefaultServiceRouter(Map<String, List<ServiceAddress>> services) {
+        this.serviceCache = new ConcurrentHashMap<>(services);
+    }
+
     @Override
-    public List<ServiceAddress> find(Class<?> serviceClazz) {
-        if (serviceCache.containsKey(serviceClazz)) {
-            return serviceCache.get(serviceClazz);
+    public List<ServiceAddress> find(String serviceName) {
+        if (null != serviceName && serviceCache.containsKey(serviceName)) {
+            return serviceCache.get(serviceName);
         }
         return null;
     }
 
     @Override
-    public void clean(Class<?> serviceClazz) {
-        serviceCache.remove(serviceClazz);
+    public void clean(String serviceName) {
+        if (CommonUtils.isNotEmpty(serviceName)) {
+            serviceCache.remove(serviceName);
+        }
     }
 
     @Override
-    public void regist(List<Class<?>> services, ServiceAddress address) {
-        if (CommonUtils.isEmpty(services)) {
+    public void regist(String serviceName, ServiceAddress address) {
+        if (CommonUtils.isEmpty(serviceName)) {
             return;
         }
-        for (Class<?> service : services) {
-            List<ServiceAddress> addressList;
-            if (serviceCache.containsKey(service)) {
-                addressList = serviceCache.get(service);
-                addressList.add(address);
-                serviceCache.replace(service, addressList);
-            } else {
-                addressList = new ArrayList<>();
-                addressList.add(address);
-                serviceCache.putIfAbsent(service, addressList);
-            }
+        List<ServiceAddress> addressList;
+        if (serviceCache.containsKey(serviceName)) {
+            addressList = serviceCache.get(serviceName);
+            addressList.add(address);
+            serviceCache.replace(serviceName, addressList);
+        } else {
+            addressList = new ArrayList<>();
+            addressList.add(address);
+            serviceCache.putIfAbsent(serviceName, addressList);
         }
     }
 

@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author shay
@@ -26,6 +28,8 @@ public class SpearClient {
         Logger logger = LoggerFactory.getLogger(SpearClient.class);
         ServiceBuilder builder = DefaultServiceBuilder.newBuilder();
         DefaultServiceRouter router = new DefaultServiceRouter();
+        router.regist("simple-service1", new ServiceAddress("127.0.0.1", 9501));
+
         builder.addCodec(JsonMessageCodec.class)
                 .addProtocol(ServiceProtocol.Tcp)
                 .addRoute(router)
@@ -36,26 +40,26 @@ public class SpearClient {
                     });
                 });
         ServiceProvider provider = builder.build();
-        ServiceRegister register = provider.getServiceT(ServiceRegister.class);
-        List<Class<?>> services = new ArrayList<>();
-        services.add(UserClient.class);
-        ServiceAddress address = new ServiceAddress("127.0.0.1", 9501);
-        register.regist(services, address);
         MessageCodec codec = provider.getServiceT(MessageCodec.class);
 
         long time = System.currentTimeMillis();
-        int count = 2;
+        int count = 200;
         for (int i = 0; i < count; i++) {
-            ProxyFactory proxyFactory = provider.getServiceT(ProxyFactory.class);
-            UserClient client = proxyFactory.createT(UserClient.class);
+            try {
+                ProxyFactory proxyFactory = provider.getServiceT(ProxyFactory.class);
+                UserClient client = proxyFactory.createT(UserClient.class, 2);
 //            String shay = client.hello("shay");
 //            logger.info("hello result:{}", shay);
-            client.add("shay");
+//                client.add("shay");
 //            client.add(18);
-            List<UserDTO> list = client.search(new UserSearchDTO());
-            byte[] encode = codec.encode(list, false);
-            logger.info("search:{}", new String(encode));
+                List<UserDTO> list = client.search(new UserSearchDTO());
+//                byte[] encode = codec.encode(list, false);
+                logger.info("search:{}", list.size());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
-        logger.info("invoke {} count,use {} ms", count, System.currentTimeMillis() - time);
+        long ms = System.currentTimeMillis() - time;
+        logger.info("invoke {} count,use {} ms,tps:{}", count, ms, count * 1000D / ms);
     }
 }

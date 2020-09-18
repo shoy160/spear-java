@@ -37,7 +37,7 @@ public class DefaultServiceEntryFactory implements ServiceEntryFactory {
     }
 
     public Class<?> getImplClass(Class<?> clazz) {
-        Set<Class<?>> classSet = TypeUtils.findClasses(c -> clazz.isAssignableFrom(c) && !c.isInterface() && !Modifier.isAbstract(c.getModifiers()));
+        Set<Class<?>> classSet = TypeUtils.findClasses(c -> clazz.isAssignableFrom(c) && !c.isInterface() && !TypeUtils.isAbstract(c));
         return CommonUtils.isEmpty(classSet) ? null : classSet.iterator().next();
     }
 
