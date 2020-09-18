@@ -17,6 +17,7 @@ public class MessageFutureTask<T extends BaseMessage> implements Future<T> {
     private final BaseMessage request;
     private boolean done;
     private T result;
+    private Throwable throwable;
 
     public MessageFutureTask(BaseMessage request) {
         this.request = request;
@@ -25,6 +26,14 @@ public class MessageFutureTask<T extends BaseMessage> implements Future<T> {
 
     public void setResult(T result) {
         this.result = result;
+        synchronized (messageLock) {
+            this.done = true;
+            messageLock.notifyAll();
+        }
+    }
+
+    public void setException(Throwable throwable) {
+        this.throwable = throwable;
         synchronized (messageLock) {
             this.done = true;
             messageLock.notifyAll();
@@ -70,6 +79,10 @@ public class MessageFutureTask<T extends BaseMessage> implements Future<T> {
         }
         if (!this.done) {
             throw new BusiException(String.format("RPC调用超时,requestId:%s", request.getId()), 504);
+        }
+        if (null != this.throwable) {
+            this.throwable.printStackTrace();
+            throw new BusiException("RPC调用异常：" + this.throwable.getMessage(), 500);
         }
         return result;
     }

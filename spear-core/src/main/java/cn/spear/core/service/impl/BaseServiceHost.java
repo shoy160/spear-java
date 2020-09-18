@@ -34,8 +34,8 @@ public abstract class BaseServiceHost implements ServiceHost {
         if (!(message instanceof InvokeMessage)) {
             return;
         }
-        if (log.isInfoEnabled()) {
-            log.info("receive request:{}", message.getId());
+        if (log.isDebugEnabled()) {
+            log.debug("receive request:{}", message.getId());
         }
         executor.execute(sender, (DefaultInvokeMessage) message);
     }

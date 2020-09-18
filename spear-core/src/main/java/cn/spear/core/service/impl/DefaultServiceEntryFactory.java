@@ -7,12 +7,14 @@ import cn.spear.core.service.ServiceEntryFactory;
 import cn.spear.core.service.ServiceGenerator;
 import cn.spear.core.service.annotation.SpearService;
 import cn.spear.core.util.CommonUtils;
-import cn.spear.core.util.TypeUtils;
+import cn.spear.core.util.ReflectUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -26,8 +28,14 @@ public class DefaultServiceEntryFactory implements ServiceEntryFactory {
     private final List<Class<?>> serviceCache;
     private final ServiceGenerator serviceGenerator;
     private final ServiceCollection services;
+    private final String basePackage;
 
     public DefaultServiceEntryFactory(ServiceCollection serviceCollection) {
+        this(serviceCollection, "");
+    }
+
+    public DefaultServiceEntryFactory(ServiceCollection serviceCollection, String basePackage) {
+        this.basePackage = basePackage;
         this.entryMap = new ConcurrentHashMap<>();
         this.serviceCache = new ArrayList<>();
         this.serviceGenerator = IocContext.getServiceT(ServiceGenerator.class);
@@ -37,14 +45,14 @@ public class DefaultServiceEntryFactory implements ServiceEntryFactory {
     }
 
     public Class<?> getImplClass(Class<?> clazz) {
-        Set<Class<?>> classSet = TypeUtils.findClasses(c -> clazz.isAssignableFrom(c) && !c.isInterface() && !TypeUtils.isAbstract(c));
+        Set<Class<?>> classSet = ReflectUtils.findClasses(basePackage, c -> ReflectUtils.isImplClass(clazz, c));
         return CommonUtils.isEmpty(classSet) ? null : classSet.iterator().next();
     }
 
     private void findServices() {
         long time = System.currentTimeMillis();
         try {
-            Set<Class<?>> classes = TypeUtils.findClasses(clazz -> clazz.getAnnotation(SpearService.class) != null);
+            Set<Class<?>> classes = ReflectUtils.findClasses(basePackage, clazz -> clazz.getAnnotation(SpearService.class) != null);
             for (Class<?> clazz : classes) {
                 Class<?> implClazz = getImplClass(clazz);
                 //判断是否有实现类

@@ -4,6 +4,7 @@ import cn.spear.core.exception.BusiException;
 import cn.spear.core.message.MessageFutureTask;
 import cn.spear.core.message.MessageListener;
 import cn.spear.core.message.MessageSender;
+import cn.spear.core.message.event.MessageEvent;
 import cn.spear.core.message.model.impl.BaseMessage;
 import cn.spear.core.message.model.impl.DefaultInvokeMessage;
 import cn.spear.core.message.model.impl.DefaultResultMessage;
@@ -23,25 +24,31 @@ import java.util.concurrent.*;
 public class DefaultServiceClient implements ServiceClient {
     private final MessageSender sender;
     private final MessageListener listener;
+    private final ServiceExecutor executor;
     private final Map<String, MessageFutureTask<DefaultResultMessage>> receiveMap;
 
     public DefaultServiceClient(MessageSender sender, MessageListener listener, ServiceExecutor executor) {
         this.sender = sender;
         this.listener = listener;
-        receiveMap = new HashMap<>();
-        this.listener.addListener(event -> {
-            BaseMessage message = event.getMessage();
-//            log.info("client receive result:{}", message.getId());
-            if (message instanceof DefaultResultMessage) {
-                MessageFutureTask<DefaultResultMessage> futureTask = receiveMap.get(message.getId());
-                if (null != futureTask) {
-                    futureTask.setResult((DefaultResultMessage) message);
-                }
+        this.receiveMap = new HashMap<>();
+        this.executor = executor;
+        this.listener.addListener(this::onReceived);
+    }
+
+    private void onReceived(MessageEvent event) {
+        BaseMessage message = event.getMessage();
+        if (log.isDebugEnabled()) {
+            log.debug("client receive result:{}", message.getId());
+        }
+        if (message instanceof DefaultResultMessage) {
+            MessageFutureTask<DefaultResultMessage> futureTask = this.receiveMap.get(message.getId());
+            if (null != futureTask) {
+                futureTask.setResult((DefaultResultMessage) message);
             }
-            if (null != executor && message instanceof DefaultInvokeMessage) {
-                executor.execute(event.getSender(), (DefaultInvokeMessage) message);
-            }
-        });
+        }
+        if (null != this.executor && message instanceof DefaultInvokeMessage) {
+            this.executor.execute(event.getSender(), (DefaultInvokeMessage) message);
+        }
     }
 
     @Override
@@ -53,7 +60,7 @@ public class DefaultServiceClient implements ServiceClient {
             MessageFutureTask<DefaultResultMessage> futureTask = new MessageFutureTask<>(message);
             receiveMap.put(message.getId(), futureTask);
             try {
-                timeout = timeout <= 0 ? 30 : timeout;
+                timeout = timeout <= 0 ? 15 : timeout;
                 return futureTask.get(timeout, TimeUnit.SECONDS);
             } catch (InterruptedException | ExecutionException | TimeoutException | BusiException e) {
                 e.printStackTrace();

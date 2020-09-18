@@ -77,9 +77,20 @@ public interface ServiceBuilder extends ServiceCollection {
      * @return builder
      */
     default ServiceBuilder addSpearServer(Action<ServiceBuilder> action) {
+        return addSpearServer(action, "");
+    }
+
+    /**
+     * 添加Spear服务
+     *
+     * @param action      action
+     * @param basePackage 基础包
+     * @return builder
+     */
+    default ServiceBuilder addSpearServer(Action<ServiceBuilder> action, String basePackage) {
         addSingleton(ServiceGenerator.class, DefaultServiceGenerator.class);
         addSingleton(ServiceEntryFactory.class, p -> {
-            return new DefaultServiceEntryFactory(this);
+            return new DefaultServiceEntryFactory(this, basePackage);
         });
         action.invoke(this);
         addSingleton(ServiceExecutor.class, provider -> {

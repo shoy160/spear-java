@@ -1,6 +1,7 @@
 package cn.spear.core.test;
 
 import cn.spear.core.util.CommonUtils;
+import cn.spear.core.util.PathUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -50,5 +51,12 @@ public class CommonUtilsTest {
         array = new String[1];
         array[0] = "shay";
         Assert.assertFalse(CommonUtils.isEmpty(array));
+    }
+
+    @Test
+    public void fileNameTest() {
+        String path = "dfd/sdfsdf\\sdfsdf\\test.ts.tar";
+        String name = PathUtils.getExt(path);
+        Assert.assertEquals(name, "test");
     }
 }

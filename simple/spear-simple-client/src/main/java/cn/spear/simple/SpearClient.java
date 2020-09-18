@@ -28,7 +28,7 @@ public class SpearClient {
         Logger logger = LoggerFactory.getLogger(SpearClient.class);
         ServiceBuilder builder = DefaultServiceBuilder.newBuilder();
         DefaultServiceRouter router = new DefaultServiceRouter();
-        router.regist("simple-service1", new ServiceAddress("127.0.0.1", 9501));
+        router.regist("simple-service", new ServiceAddress("127.0.0.1", 9501));
 
         builder.addCodec(JsonMessageCodec.class)
                 .addProtocol(ServiceProtocol.Tcp)
@@ -43,7 +43,7 @@ public class SpearClient {
         MessageCodec codec = provider.getServiceT(MessageCodec.class);
 
         long time = System.currentTimeMillis();
-        int count = 200;
+        int count = 10000;
         for (int i = 0; i < count; i++) {
             try {
                 ProxyFactory proxyFactory = provider.getServiceT(ProxyFactory.class);
@@ -51,10 +51,10 @@ public class SpearClient {
 //            String shay = client.hello("shay");
 //            logger.info("hello result:{}", shay);
 //                client.add("shay");
-//            client.add(18);
+//                client.add(18);
                 List<UserDTO> list = client.search(new UserSearchDTO());
 //                byte[] encode = codec.encode(list, false);
-                logger.info("search:{}", list.size());
+                logger.debug("search result size:{}", list.size());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

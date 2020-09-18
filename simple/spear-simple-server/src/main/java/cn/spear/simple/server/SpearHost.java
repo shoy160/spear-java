@@ -29,7 +29,7 @@ public class SpearHost {
                         MessageCodec codec = p.getServiceT(MessageCodec.class);
                         return new TcpServiceListener(codec);
                     });
-                })
+                }, "cn.spear.simple")
                 .build();
 
         ServiceHost host = provider.getServiceT(ServiceHost.class);
