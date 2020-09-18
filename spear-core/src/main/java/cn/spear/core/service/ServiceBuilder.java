@@ -76,8 +76,8 @@ public interface ServiceBuilder extends ServiceCollection {
      * @param action action
      * @return builder
      */
-    default ServiceBuilder addSpearServer(Action<ServiceBuilder> action) {
-        return addSpearServer(action, "");
+    default ServiceBuilder addServer(Action<ServiceBuilder> action) {
+        return addServer(action, "");
     }
 
     /**
@@ -87,11 +87,9 @@ public interface ServiceBuilder extends ServiceCollection {
      * @param basePackage 基础包
      * @return builder
      */
-    default ServiceBuilder addSpearServer(Action<ServiceBuilder> action, String basePackage) {
+    default ServiceBuilder addServer(Action<ServiceBuilder> action, String basePackage) {
         addSingleton(ServiceGenerator.class, DefaultServiceGenerator.class);
-        addSingleton(ServiceEntryFactory.class, p -> {
-            return new DefaultServiceEntryFactory(this, basePackage);
-        });
+        addSingleton(ServiceEntryFactory.class, p -> new DefaultServiceEntryFactory(this, basePackage));
         action.invoke(this);
         addSingleton(ServiceExecutor.class, provider -> {
             ServiceEntryFactory entryFactory = provider.getServiceT(ServiceEntryFactory.class);
@@ -113,7 +111,7 @@ public interface ServiceBuilder extends ServiceCollection {
      * @param action action
      * @return builder
      */
-    default ServiceBuilder addSpearClient(Action<ServiceBuilder> action) {
+    default ServiceBuilder addClient(Action<ServiceBuilder> action) {
         addSingleton(ServiceGenerator.class, DefaultServiceGenerator.class);
         addSingleton(ProxyFactory.class, DefaultProxyFactory.class);
         action.invoke(this);

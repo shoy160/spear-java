@@ -2,15 +2,11 @@ package cn.spear.simple.server;
 
 import cn.spear.codec.json.JsonMessageCodec;
 import cn.spear.core.ioc.ServiceProvider;
-import cn.spear.core.message.MessageCodec;
 import cn.spear.core.service.ServiceAddress;
-import cn.spear.core.service.ServiceBuilder;
 import cn.spear.core.service.ServiceHost;
-import cn.spear.core.service.ServiceListener;
-import cn.spear.core.service.enums.ServiceProtocol;
 import cn.spear.core.service.impl.DefaultServiceBuilder;
 import cn.spear.core.service.impl.DefaultServiceRouter;
-import cn.spear.protocol.tcp.TcpServiceListener;
+import cn.spear.protocol.tcp.TcpServiceBuilder;
 
 /**
  * @author shay
@@ -19,18 +15,12 @@ import cn.spear.protocol.tcp.TcpServiceListener;
 public class SpearHost {
 
     public static void main(String[] args) {
-        ServiceBuilder builder = DefaultServiceBuilder.newBuilder();
-        ServiceProvider provider = builder
-                .addCodec(JsonMessageCodec.class)
-                .addRoute(DefaultServiceRouter.class)
-                .addProtocol(ServiceProtocol.Tcp)
-                .addSpearServer(b -> {
-                    b.addSingleton(ServiceListener.class, p -> {
-                        MessageCodec codec = p.getServiceT(MessageCodec.class);
-                        return new TcpServiceListener(codec);
-                    });
-                }, "cn.spear.simple")
-                .build();
+        ServiceProvider provider =
+                DefaultServiceBuilder.newBuilder()
+                        .addCodec(JsonMessageCodec.class)
+                        .addRoute(DefaultServiceRouter.class)
+                        .addServer(TcpServiceBuilder::addTcpProtocol, "cn.spear.simple")
+                        .build();
 
         ServiceHost host = provider.getServiceT(ServiceHost.class);
 
