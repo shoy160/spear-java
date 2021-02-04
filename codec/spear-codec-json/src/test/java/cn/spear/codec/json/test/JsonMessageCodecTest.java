@@ -1,16 +1,14 @@
 package cn.spear.codec.json.test;
 
 import cn.spear.codec.json.JsonMessageCodec;
-import cn.spear.codec.json.JsonMessageSerializer;
 import cn.spear.codec.json.test.model.UserDTO;
 import cn.spear.codec.json.test.model.UserSearchDTO;
 import cn.spear.core.message.MessageCodec;
-import cn.spear.core.message.MessageSerializer;
 import cn.spear.core.message.model.impl.DefaultInvokeMessage;
 import cn.spear.core.message.model.impl.DefaultResultMessage;
 import cn.spear.core.util.CommonUtils;
 import cn.spear.core.util.RandomUtils;
-import cn.spear.core.util.StreamUtils;
+import cn.spear.core.util.BufferUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -55,7 +53,7 @@ public class JsonMessageCodecTest {
         message.addHeader("ip", "127.0.0.1");
         message.addHeader("host", "localhost");
         byte[] buffer = codec.encode(message);
-        log.info("encode:{}", new String(StreamUtils.unGzip(buffer)));
+        log.info("encode:{}", new String(BufferUtils.unGzip(buffer)));
         message = codec.decodeT(buffer, DefaultInvokeMessage.class, true);
         Assert.assertEquals(message.getServiceId(), "testService");
     }
@@ -71,7 +69,7 @@ public class JsonMessageCodecTest {
         dto.setEmail("132456@qq.com");
         result.setContent(dto);
         byte[] buffer = codec.encode(result);
-        log.info("encode:{}", new String(StreamUtils.unGzip(buffer)));
+        log.info("encode:{}", new String(BufferUtils.unGzip(buffer)));
         DefaultResultMessage result1 = codec.decodeT(buffer, DefaultResultMessage.class, true);
         Assert.assertEquals(200, (int) result1.getCode());
         UserDTO content = CommonUtils.cast(result.getContent(), UserDTO.class);

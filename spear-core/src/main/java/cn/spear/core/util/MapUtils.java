@@ -328,4 +328,31 @@ public class MapUtils {
         }
         return builder.toString();
     }
+
+    public static <K, V> String get(Map<K, V> map, K key, String defaultValue) {
+        try {
+            if (!map.containsKey(key)) {
+                return defaultValue;
+            }
+            V value = map.get(key);
+            return value == null ? defaultValue : value.toString();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return defaultValue;
+        }
+    }
+
+    public static <T, K, V> T get(Map<K, V> map, K key, Class<T> clazz, T defaultValue) {
+        try {
+            if (!map.containsKey(key)) {
+                return defaultValue;
+            }
+            V value = map.get(key);
+            T result = CommonUtils.cast(value, clazz);
+            return result == null ? defaultValue : result;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return defaultValue;
+        }
+    }
 }

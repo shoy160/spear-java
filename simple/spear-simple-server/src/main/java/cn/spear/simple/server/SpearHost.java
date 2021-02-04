@@ -5,7 +5,7 @@ import cn.spear.core.ioc.ServiceProvider;
 import cn.spear.core.service.ServiceAddress;
 import cn.spear.core.service.ServiceHost;
 import cn.spear.core.service.impl.DefaultServiceBuilder;
-import cn.spear.core.service.impl.DefaultServiceRouter;
+import cn.spear.nacos.route.NacosServiceRoute;
 import cn.spear.protocol.tcp.TcpServiceBuilder;
 
 /**
@@ -18,15 +18,16 @@ public class SpearHost {
         ServiceProvider provider =
                 DefaultServiceBuilder.newBuilder()
                         .addCodec(JsonMessageCodec.class)
-                        .addRoute(DefaultServiceRouter.class)
+//                        .addRoute(DefaultServiceRouter.class)
+                        .addRoute(new NacosServiceRoute("60.255.161.101:8848", "public"))
                         .addServer(TcpServiceBuilder::addTcpProtocol, "cn.spear.simple")
                         .build();
 
         ServiceHost host = provider.getServiceT(ServiceHost.class);
 
-        ServiceAddress address = new ServiceAddress("127.0.0.1", 9501);
+        ServiceAddress address = new ServiceAddress(9501);
         address.setGzip(true);
-        address.setService("192.168.2.54");
+        address.setService("192.168.2.14");
         host.start(address);
     }
 }

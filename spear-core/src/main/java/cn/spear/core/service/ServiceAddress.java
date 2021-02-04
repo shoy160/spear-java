@@ -6,6 +6,7 @@ import cn.spear.core.service.enums.ServiceProtocol;
 import cn.spear.core.util.CommonUtils;
 import lombok.Getter;
 import lombok.Setter;
+import sun.net.util.IPAddressUtil;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -21,6 +22,7 @@ import java.util.Objects;
 @Setter
 public class ServiceAddress implements Weight {
 
+    private final static String LOCAL_HOST_REG = "^(\\*|(localhost))$";
     private String host;
     private Integer port;
     /**
@@ -62,6 +64,12 @@ public class ServiceAddress implements Weight {
         this.servicePort = port;
     }
 
+    public ServiceAddress(int port) {
+        this();
+        this.port = port;
+        this.servicePort = port;
+    }
+
     @Override
     public String toString() {
         String service = CommonUtils.isEmpty(this.service) ? this.host : this.service;
@@ -81,6 +89,10 @@ public class ServiceAddress implements Weight {
 
     public SocketAddress getServerAddress() {
         return new InetSocketAddress(this.host, this.port);
+    }
+
+    public boolean isLocal() {
+        return CommonUtils.isEmpty(this.host) || this.host.matches(LOCAL_HOST_REG);
     }
 
     @Override

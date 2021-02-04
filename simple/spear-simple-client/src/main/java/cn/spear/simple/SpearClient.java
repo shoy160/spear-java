@@ -6,6 +6,7 @@ import cn.spear.core.proxy.ProxyFactory;
 import cn.spear.core.service.*;
 import cn.spear.core.service.impl.DefaultServiceBuilder;
 import cn.spear.core.service.impl.DefaultServiceRouter;
+import cn.spear.nacos.route.NacosServiceRoute;
 import cn.spear.protocol.tcp.TcpServiceBuilder;
 import cn.spear.simple.contract.UserClient;
 import cn.spear.simple.contract.dto.*;
@@ -28,7 +29,8 @@ public class SpearClient {
         ServiceProvider provider =
                 DefaultServiceBuilder.newBuilder()
                         .addCodec(JsonMessageCodec.class)
-                        .addRoute(router)
+//                        .addRoute(router)
+                        .addRoute(new NacosServiceRoute("60.255.161.101:8848", "public"))
                         .addClient(TcpServiceBuilder::addTcpProtocolClient)
                         .build();
 

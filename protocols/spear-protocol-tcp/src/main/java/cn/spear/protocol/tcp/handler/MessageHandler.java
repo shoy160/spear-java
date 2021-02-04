@@ -29,7 +29,7 @@ public class MessageHandler<T extends BaseMessage> extends SimpleChannelInboundH
         byte[] data = new byte[buffer.readableBytes()];
         buffer.readBytes(data);
         T serviceMsg = this.codec.decodeT(data, this.clazz, this.gzip);
-        context.fireChannelRead(serviceMsg);
         ReferenceCountUtil.release(buffer);
+        context.fireChannelRead(serviceMsg);
     }
 }
