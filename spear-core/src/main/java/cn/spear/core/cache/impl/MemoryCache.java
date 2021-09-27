@@ -36,8 +36,8 @@ public class MemoryCache<K, V> implements Cache<K, V> {
     }
 
     @Override
-    public void put(K key, V value, long expireTime) {
-        CacheItem<V> item = new CacheItem<>(value, expireTime);
+    public void put(K key, V value, long expireAt) {
+        CacheItem<V> item = new CacheItem<>(value, expireAt);
         this.mapCache.put(key, item);
     }
 
@@ -50,12 +50,12 @@ public class MemoryCache<K, V> implements Cache<K, V> {
     }
 
     @Override
-    public V getOrPut(K key, Function<? super K, ? extends V> mappingFunction, long expireTime) {
+    public V getOrPut(K key, Function<? super K, ? extends V> mappingFunction, long expireAt) {
         if (this.mapCache.containsKey(key)) {
             return this.mapCache.get(key).getValue();
         }
         V value = mappingFunction.apply(key);
-        put(key, value, expireTime);
+        put(key, value, expireAt);
         return value;
     }
 

@@ -1,6 +1,6 @@
 package cn.spear.core.service.impl;
 
-import cn.spear.core.exception.BusiException;
+import cn.spear.core.exception.SpearException;
 import cn.spear.core.message.MessageFutureTask;
 import cn.spear.core.message.MessageListener;
 import cn.spear.core.message.MessageSender;
@@ -62,7 +62,7 @@ public class DefaultServiceClient implements ServiceClient {
             try {
                 timeout = timeout <= 0 ? 15 : timeout;
                 return futureTask.get(timeout, TimeUnit.SECONDS);
-            } catch (InterruptedException | ExecutionException | TimeoutException | BusiException e) {
+            } catch (InterruptedException | ExecutionException | TimeoutException | SpearException e) {
                 e.printStackTrace();
                 return new DefaultResultMessage("RPC请求超时", 504);
             } finally {

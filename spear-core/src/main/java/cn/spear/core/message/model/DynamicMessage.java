@@ -1,6 +1,7 @@
 package cn.spear.core.message.model;
 
 /**
+ * 动态消息
  * @author shay
  * @date 2020/9/7
  */

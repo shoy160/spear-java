@@ -2,7 +2,6 @@ package cn.spear.protocol.tcp.handler;
 
 import cn.spear.core.message.MessageCodec;
 import cn.spear.core.message.model.impl.BaseMessage;
-import cn.spear.core.util.TypeUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

@@ -11,7 +11,7 @@
         <module>spear-core</module>
         <module>protocols</module>
         <module>codec</module>
-        <module>simple</module>
+        <module>sample</module>
         <module>spear-nacos</module>
         <module>spear-redis</module>
         <module>spear-consul</module>

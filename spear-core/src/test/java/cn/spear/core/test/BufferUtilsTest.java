@@ -38,10 +38,10 @@ public class BufferUtilsTest {
     }
 
     @Test
-    public void simpleTest() {
+    public void sampleTest() {
         int num = RandomUtils.randomInteger(1000);
         String hex = BufferUtils.toHex(BufferUtils.fromInt(num, false));
-        String simpleHex = BufferUtils.toHex(BufferUtils.fromInt(num, true));
-        log.info("num:{}, hex:{}, simple hex:{}", num, hex, simpleHex);
+        String sampleHex = BufferUtils.toHex(BufferUtils.fromInt(num, true));
+        log.info("num:{}, hex:{}, sample hex:{}", num, hex, sampleHex);
     }
 }

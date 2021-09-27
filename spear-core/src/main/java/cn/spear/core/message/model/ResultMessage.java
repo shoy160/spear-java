@@ -1,9 +1,10 @@
 package cn.spear.core.message.model;
 
-import cn.spear.core.util.CommonUtils;
 import cn.spear.core.util.TypeUtils;
 
 /**
+ * 调用结果消息
+ *
  * @author shay
  * @date 2020/9/4
  */

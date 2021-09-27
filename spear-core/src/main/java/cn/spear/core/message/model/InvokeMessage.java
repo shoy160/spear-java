@@ -1,12 +1,13 @@
 package cn.spear.core.message.model;
 
-import cn.spear.core.util.CommonUtils;
 import cn.spear.core.util.TypeUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 调用消息
+ *
  * @author shay
  * @date 2020/9/4
  */

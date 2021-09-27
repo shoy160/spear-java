@@ -160,7 +160,7 @@ public class BufferUtils {
         return lowerCase ? strHex.toLowerCase() : strHex.toUpperCase();
     }
 
-    private static byte[] simple(byte[] bytes) {
+    private static byte[] sample(byte[] bytes) {
         int start = 0;
         for (int i = 0; i < bytes.length; i++) {
             if (bytes[i] > 0) {
@@ -171,22 +171,22 @@ public class BufferUtils {
         return start > 0 ? Arrays.copyOfRange(bytes, start, bytes.length) : bytes;
     }
 
-    public static byte[] fromInt(int value, boolean simple) {
+    public static byte[] fromInt(int value, boolean sample) {
         byte[] result = new byte[LENGTH_INT];
         for (int i = LENGTH_INT - 1; i >= 0; i--) {
             result[i] = (byte) (value & 0xFF);
             value >>= 8;
         }
-        return simple ? simple(result) : result;
+        return sample ? sample(result) : result;
     }
 
-    public static byte[] fromLong(long value, boolean simple) {
+    public static byte[] fromLong(long value, boolean sample) {
         byte[] result = new byte[LENGTH_LONG];
         for (int i = LENGTH_LONG - 1; i >= 0; i--) {
             result[i] = (byte) (value & 0xFF);
             value >>= 8;
         }
-        return simple ? simple(result) : result;
+        return sample ? sample(result) : result;
     }
 
     public static byte[] fromString(String msg) {

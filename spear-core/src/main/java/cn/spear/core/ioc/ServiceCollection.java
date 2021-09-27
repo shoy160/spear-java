@@ -1,5 +1,6 @@
 package cn.spear.core.ioc;
 
+import cn.spear.core.ioc.impl.ServiceCollectionImpl;
 import cn.spear.core.ioc.impl.ServiceProviderImpl;
 import cn.spear.core.lang.Func;
 
@@ -12,6 +13,15 @@ import java.util.function.Function;
  * @date 2020/9/8
  */
 public interface ServiceCollection {
+
+    /**
+     * 服务集合实例
+     *
+     * @return instance
+     */
+    static ServiceCollection instance() {
+        return new ServiceCollectionImpl();
+    }
 
     /**
      * 添加服务
@@ -128,6 +138,8 @@ public interface ServiceCollection {
      * @return provider
      */
     default ServiceProvider build() {
-        return IocContext.provider = new ServiceProviderImpl(this.getDescriptors());
+        ServiceProviderImpl provider = new ServiceProviderImpl(this.getDescriptors());
+        IocContext.setProvider(provider);
+        return provider;
     }
 }

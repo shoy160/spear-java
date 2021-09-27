@@ -30,10 +30,10 @@ public interface Cache<K, V> {
      *
      * @param key        key
      * @param value      value
-     * @param expireTime expire
+     * @param expireAt expire
      */
-    default void put(K key, V value, Date expireTime) {
-        put(key, value, expireTime.getTime());
+    default void put(K key, V value, Date expireAt) {
+        put(key, value, expireAt.getTime());
     }
 
     /**
@@ -41,9 +41,9 @@ public interface Cache<K, V> {
      *
      * @param key        key
      * @param value      value
-     * @param expireTime expire
+     * @param expireAt expire
      */
-    void put(K key, V value, long expireTime);
+    void put(K key, V value, long expireAt);
 
     /**
      * 批量添加缓存
@@ -61,21 +61,21 @@ public interface Cache<K, V> {
      * 批量添加缓存
      *
      * @param map        缓存Map
-     * @param expireTime expiration time
+     * @param expireAt expiration time
      */
-    default void putAll(Map<K, V> map, Date expireTime) {
-        putAll(map, expireTime.getTime());
+    default void putAll(Map<K, V> map, Date expireAt) {
+        putAll(map, expireAt.getTime());
     }
 
     /**
      * 批量添加缓存
      *
      * @param map        缓存Map
-     * @param expireTime expiration time
+     * @param expireAt expiration time
      */
-    default void putAll(Map<K, V> map, long expireTime) {
+    default void putAll(Map<K, V> map, long expireAt) {
         for (K key : map.keySet()) {
-            put(key, map.get(key), expireTime);
+            put(key, map.get(key), expireAt);
         }
     }
 
@@ -92,10 +92,10 @@ public interface Cache<K, V> {
      *
      * @param key             key
      * @param mappingFunction the function to compute a value
-     * @param expireTime      expiration time
+     * @param expireAt      expiration time
      * @return cached value
      */
-    V getOrPut(K key, Function<? super K, ? extends V> mappingFunction, long expireTime);
+    V getOrPut(K key, Function<? super K, ? extends V> mappingFunction, long expireAt);
 
 
     /**

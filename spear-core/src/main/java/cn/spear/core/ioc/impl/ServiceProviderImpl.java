@@ -3,7 +3,6 @@ package cn.spear.core.ioc.impl;
 import cn.spear.core.ioc.ServiceDescriptor;
 import cn.spear.core.ioc.ServiceLifetime;
 import cn.spear.core.ioc.ServiceProvider;
-import com.sun.corba.se.spi.ior.ObjectKey;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -21,6 +20,14 @@ public class ServiceProviderImpl implements ServiceProvider {
     public ServiceProviderImpl(List<ServiceDescriptor> descriptors) {
         this.descriptors = descriptors;
         serviceCache = new ConcurrentHashMap<>();
+    }
+
+    private void cleanScope() {
+        for (ServiceDescriptor descriptor : descriptors) {
+            if (ServiceLifetime.Scoped.equals(descriptor.getLifetime())) {
+                serviceCache.remove(descriptor.getServiceType());
+            }
+        }
     }
 
     @Override
@@ -52,5 +59,15 @@ public class ServiceProviderImpl implements ServiceProvider {
             }
         }
         return null;
+    }
+
+    @Override
+    public void startScope() {
+        cleanScope();
+    }
+
+    @Override
+    public void completeScope() {
+        cleanScope();
     }
 }
