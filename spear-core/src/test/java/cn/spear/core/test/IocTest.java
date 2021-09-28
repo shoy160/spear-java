@@ -2,11 +2,8 @@ package cn.spear.core.test;
 
 import cn.spear.core.ioc.IocContext;
 import cn.spear.core.ioc.ServiceCollection;
-import cn.spear.core.ioc.ServiceProvider;
-import cn.spear.core.ioc.impl.ServiceCollectionImpl;
 import cn.spear.core.test.model.ServiceDTO;
-import cn.spear.core.util.CommonUtils;
-import cn.spear.core.util.RandomUtils;
+import cn.spear.core.util.IdentityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -22,7 +19,7 @@ public class IocTest {
         ServiceCollection services = ServiceCollection.instance();
         services.addScoped(ServiceDTO.class, serviceProvider -> {
             ServiceDTO dto = new ServiceDTO();
-            dto.setId(RandomUtils.fastId());
+            dto.setId(IdentityUtils.fastId());
             return dto;
         });
         services.build();

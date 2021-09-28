@@ -1,11 +1,11 @@
 package cn.spear.core.util;
 
 import cn.spear.core.lang.Weight;
-import cn.spear.core.service.ServiceAddress;
 
-import java.util.*;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
+import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  * @author shay
@@ -97,7 +97,7 @@ public class ArrayUtils {
         for (T t : iterable) {
             total += t.getWeight();
         }
-        int randomIdx = RandomUtils.randomInteger(total);
+        int randomIdx = RandomUtils.randomInt(total);
         total = 0;
         for (T t : iterable) {
             total += t.getWeight();
@@ -120,7 +120,7 @@ public class ArrayUtils {
         for (T t : array) {
             total += t.getWeight();
         }
-        int randomIdx = RandomUtils.randomInteger(total);
+        int randomIdx = RandomUtils.randomInt(total);
         total = 0;
         for (T t : array) {
             total += t.getWeight();
@@ -129,5 +129,32 @@ public class ArrayUtils {
             }
         }
         return random(array);
+    }
+
+    /**
+     * 新建一个空数组
+     *
+     * @param <T>           数组元素类型
+     * @param componentType 元素类型
+     * @param newSize       大小
+     * @return 空数组
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T[] newArray(Class<?> componentType, int newSize) {
+        return (T[]) Array.newInstance(componentType, newSize);
+    }
+
+
+    /**
+     * 将集合转为数组
+     *
+     * @param <T>        数组元素类型
+     * @param collection 集合
+     * @param clazz      集合元素类型
+     * @return 数组
+     * @since 3.0.9
+     */
+    public static <T> T[] toArray(Collection<T> collection, Class<T> clazz) {
+        return collection.toArray(newArray(clazz, 0));
     }
 }

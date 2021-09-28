@@ -6,7 +6,6 @@ import cn.spear.core.service.enums.ServiceProtocol;
 import cn.spear.core.util.CommonUtils;
 import lombok.Getter;
 import lombok.Setter;
-import sun.net.util.IPAddressUtil;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;

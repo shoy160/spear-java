@@ -8,6 +8,7 @@ import cn.spear.core.service.ServiceAddress;
 import cn.spear.core.service.ServiceListener;
 import cn.spear.core.util.CommonUtils;
 import cn.spear.protocol.tcp.handler.MessageHandler;
+import cn.spear.protocol.tcp.handler.ServerHandler;
 import cn.spear.protocol.tcp.sender.TcpServerSender;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -52,13 +53,7 @@ public class TcpServiceListener extends DefaultMessageListener implements Servic
                                 .addLast(new LengthFieldPrepender(4))
                                 .addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4))
                                 .addLast(new MessageHandler<>(codec, address.getGzip(), DefaultInvokeMessage.class))
-                                .addLast(new SimpleChannelInboundHandler<DefaultInvokeMessage>() {
-                                    @Override
-                                    protected void channelRead0(ChannelHandlerContext context, DefaultInvokeMessage invokeMessage) {
-                                        TcpServerSender sender = new TcpServerSender(codec, context, address);
-                                        onReceived(new MessageEvent(sender, invokeMessage));
-                                    }
-                                })
+                                .addLast(new ServerHandler(address, codec, event -> onReceived(event)))
                         ;
                     }
                 });

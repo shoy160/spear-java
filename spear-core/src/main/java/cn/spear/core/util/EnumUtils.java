@@ -1,10 +1,8 @@
 package cn.spear.core.util;
 
-import club.raveland.core.enums.ValueEnum;
-import club.raveland.core.enums.ValueNameEnum;
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.spear.core.convert.Convert;
+import cn.spear.core.lang.enums.ValueEnum;
+import cn.spear.core.lang.enums.ValueNameEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +47,7 @@ public final class EnumUtils {
      * @return 枚举
      */
     public static <T, E extends ValueEnum<T>> E getEnum(String enumName, Class<E> clazz) {
-        if (StrUtil.isEmpty(enumName)) {
+        if (CommonUtils.isEmpty(enumName)) {
             return null;
         }
         E[] enums = clazz.getEnumConstants();
@@ -71,7 +69,7 @@ public final class EnumUtils {
      * @return 枚举
      */
     public static <T, E extends ValueNameEnum<T>> E getEnumByNamed(String named, Class<E> clazz) {
-        if (StrUtil.isEmpty(named)) {
+        if (CommonUtils.isEmpty(named)) {
             return null;
         }
         E[] enums = clazz.getEnumConstants();
@@ -147,7 +145,7 @@ public final class EnumUtils {
                 }
             }
         }
-        return ArrayUtil.toArray(list, clazz);
+        return ArrayUtils.toArray(list, clazz);
     }
 
     /**
@@ -176,7 +174,7 @@ public final class EnumUtils {
         if (value == null) {
             return false;
         }
-        if (ArrayUtil.isEmpty(flags)) {
+        if (CommonUtils.isEmpty(flags)) {
             return true;
         }
         for (E e : flags) {
@@ -199,7 +197,7 @@ public final class EnumUtils {
         if (value == null) {
             return false;
         }
-        if (ArrayUtil.isEmpty(flags)) {
+        if (CommonUtils.isEmpty(flags)) {
             return true;
         }
         for (E e : flags) {
@@ -208,6 +206,18 @@ public final class EnumUtils {
             }
         }
         return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Number> T convert(Long value, T defValue) {
+        if (null == value) {
+            return null;
+        }
+        try {
+            return (T) value;
+        } catch (Exception ex) {
+            return defValue;
+        }
     }
 
     /**
@@ -222,7 +232,7 @@ public final class EnumUtils {
             return value;
         }
         Long result = Convert.toLong(value) | Convert.toLong(flag.getValue());
-        return Convert.convert(value.getClass(), result, value);
+        return convert(result, value);
     }
 
     /**
@@ -234,14 +244,14 @@ public final class EnumUtils {
      */
     @SafeVarargs
     public static <T extends Number, E extends ValueEnum<T>> T addFlags(T value, E... flags) {
-        if (value == null || ArrayUtil.isEmpty(flags)) {
+        if (value == null || CommonUtils.isEmpty(flags)) {
             return value;
         }
         Long flag = Convert.toLong(value);
         for (E e : flags) {
             flag |= Convert.toLong(e.getValue());
         }
-        return Convert.convert(value.getClass(), flag, value);
+        return convert(flag, value);
     }
 
     /**
@@ -257,7 +267,7 @@ public final class EnumUtils {
         }
         long flagValue = Convert.toLong(flag.getValue());
         long result = (Convert.toLong(value) | flagValue) ^ flagValue;
-        return Convert.convert(value.getClass(), result, value);
+        return convert(result, value);
     }
 
     /**
@@ -269,7 +279,7 @@ public final class EnumUtils {
      */
     @SafeVarargs
     public static <T extends Number, E extends ValueEnum<T>> T removeFlags(T value, E... flags) {
-        if (value == null || ArrayUtil.isEmpty(flags)) {
+        if (value == null || CommonUtils.isEmpty(flags)) {
             return value;
         }
         Long flag = Convert.toLong(value);
@@ -277,6 +287,6 @@ public final class EnumUtils {
             long flagValue = Convert.toLong(e.getValue());
             flag = (flag | flagValue) ^ flagValue;
         }
-        return Convert.convert(value.getClass(), flag, value);
+        return convert(flag, value);
     }
 }

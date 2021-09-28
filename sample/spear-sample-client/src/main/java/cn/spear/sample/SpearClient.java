@@ -32,7 +32,7 @@ public class SpearClient {
                         .build();
 
         long time = System.currentTimeMillis();
-        int count = 1000;
+        int count = 1;
         for (int i = 0; i < count; i++) {
             try {
                 ProxyFactory proxyFactory = provider.getServiceT(ProxyFactory.class);

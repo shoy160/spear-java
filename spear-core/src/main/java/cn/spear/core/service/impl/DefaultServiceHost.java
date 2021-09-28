@@ -40,7 +40,7 @@ public class DefaultServiceHost extends BaseServiceHost {
             address.setCodec(codec);
             Thread t = new Thread(() -> listener.start(address));
             t.start();
-            log.info("服务已启动:{},Gzip:{},Codec:{},Protocol:{}", address.toString(), address.getGzip(), address.getCodec(), address.getProtocol());
+            log.info("服务已启动:{},Gzip:{},Codec:{},Protocol:{}", address, address.getGzip(), address.getCodec(), address.getProtocol());
         } catch (Exception ex) {
             log.error("服务启动失败", ex);
         }
