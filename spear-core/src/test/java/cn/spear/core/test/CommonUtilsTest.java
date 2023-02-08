@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * Util 测试
@@ -58,5 +59,32 @@ public class CommonUtilsTest {
         String path = "dfd/sdfsdf\\sdfsdf\\test.ts.tar";
         String name = PathUtils.getExt(path);
         Assert.assertEquals(name, "test");
+    }
+
+    @Test
+    public void timeoutTest() {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        try {
+            Future<Object> future = executorService.submit(() -> {
+                try {
+                    return executeTask(1, 3);
+                } catch (Throwable e) {
+                    throw new ExecutionException(e);
+                }
+            });
+            Object result = future.get(5, TimeUnit.SECONDS);
+            log.info(result.toString());
+        } catch (Throwable ex) {
+            Throwable throwable = ex;
+            if (throwable instanceof InterruptedException || throwable instanceof ExecutionException) {
+                throwable = throwable.getCause();
+            }
+            throwable.printStackTrace();
+        }
+    }
+
+    private Object executeTask(int a, int b) throws Throwable {
+        Thread.sleep(6000L);
+        return a + b;
     }
 }

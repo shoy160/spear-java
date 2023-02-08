@@ -22,6 +22,8 @@
     <packaging>pom</packaging>
 
     <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <version.spear>1.0.0</version.spear>
         <version.lombok>1.18.12</version.lombok>
         <version.junit>4.13</version.junit>
