@@ -57,6 +57,6 @@ public class CommonUtilsTest {
     public void fileNameTest() {
         String path = "dfd/sdfsdf\\sdfsdf\\test.ts.tar";
         String name = PathUtils.getExt(path);
-        Assert.assertEquals(name, "test");
+        Assert.assertEquals(name, "tar");
     }
 }

@@ -12,6 +12,7 @@ import cn.spear.core.service.ServiceClient;
 import cn.spear.core.service.ServiceExecutor;
 import cn.spear.core.service.impl.BaseServiceClientFactory;
 import cn.spear.core.service.impl.DefaultServiceClient;
+import cn.spear.protocol.tcp.handler.ClientHandler;
 import cn.spear.protocol.tcp.handler.MessageHandler;
 import cn.spear.protocol.tcp.sender.TcpClientSender;
 import io.netty.bootstrap.Bootstrap;
@@ -30,11 +31,12 @@ import io.netty.util.AttributeKey;
  */
 public class TcpClientFactory extends BaseServiceClientFactory {
     private final ServiceExecutor executor;
-    private final AttributeKey<ServiceAddress> ADDRESS_KEY = AttributeKey.valueOf("address");
-    private final AttributeKey<MessageSender> SENDER_KEY = AttributeKey.valueOf("sender");
-    private final AttributeKey<MessageListener> LISTENER_KEY = AttributeKey.valueOf("listener");
 
     public TcpClientFactory(ServiceExecutor executor) {
+        this.executor = executor;
+    }
+    public TcpClientFactory(ServiceExecutor executor, Integer maxPool) {
+        super(maxPool);
         this.executor = executor;
     }
 
@@ -53,21 +55,7 @@ public class TcpClientFactory extends BaseServiceClientFactory {
                                 .addLast(new LengthFieldPrepender(4))
                                 .addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4))
                                 .addLast(new MessageHandler<>(codec, gzip, DefaultResultMessage.class))
-                                .addLast(new SimpleChannelInboundHandler<DefaultResultMessage>() {
-                                    @Override
-                                    protected void channelRead0(ChannelHandlerContext context, DefaultResultMessage message) throws Exception {
-                                        MessageListener listener = context.channel().attr(LISTENER_KEY).get();
-                                        MessageSender sender = context.channel().attr(SENDER_KEY).get();
-                                        listener.onReceived(new MessageEvent(sender, message));
-                                    }
-
-                                    @Override
-                                    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-                                        super.channelInactive(ctx);
-                                        ServiceAddress address = ctx.channel().attr(ADDRESS_KEY).get();
-                                        removeClient(address);
-                                    }
-                                });
+                                .addLast(new ClientHandler(address -> removeClient(address)));
                     }
                 });
         return bootstrap;
@@ -81,9 +69,9 @@ public class TcpClientFactory extends BaseServiceClientFactory {
         Channel channel = connect.channel();
         DefaultMessageListener listener = new DefaultMessageListener();
         TcpClientSender sender = new TcpClientSender(codec, channel, address);
-        channel.attr(ADDRESS_KEY).set(address);
-        channel.attr(SENDER_KEY).set(sender);
-        channel.attr(LISTENER_KEY).set(listener);
+        channel.attr(ChannelAttributes.ADDRESS_KEY).set(address);
+        channel.attr(ChannelAttributes.SENDER_KEY).set(sender);
+        channel.attr(ChannelAttributes.LISTENER_KEY).set(listener);
         return new DefaultServiceClient(sender, listener, this.executor);
     }
 }

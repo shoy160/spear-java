@@ -19,7 +19,7 @@ public class TypeUtils {
         if (type instanceof ParameterizedType) {
             result = (ParameterizedType) type;
         } else if (type instanceof Class) {
-            Class<?> clazz = (Class) type;
+            Class<?> clazz = (Class<?>) type;
             Type genericSuper = clazz.getGenericSuperclass();
             if (null == genericSuper || Object.class.equals(genericSuper)) {
                 Type[] genericInterfaces = clazz.getGenericInterfaces();

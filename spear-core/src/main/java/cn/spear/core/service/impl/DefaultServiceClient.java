@@ -1,7 +1,6 @@
 package cn.spear.core.service.impl;
 
 import cn.spear.core.exception.BusiException;
-import cn.spear.core.message.MessageFutureTask;
 import cn.spear.core.message.MessageListener;
 import cn.spear.core.message.MessageSender;
 import cn.spear.core.message.event.MessageEvent;
@@ -11,10 +10,14 @@ import cn.spear.core.message.model.impl.DefaultResultMessage;
 import cn.spear.core.service.ServiceClient;
 import cn.spear.core.service.ServiceExecutor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author shay
@@ -25,7 +28,7 @@ public class DefaultServiceClient implements ServiceClient {
     private final MessageSender sender;
     private final MessageListener listener;
     private final ServiceExecutor executor;
-    private final Map<String, MessageFutureTask<DefaultResultMessage>> receiveMap;
+    private final Map<String, CompletableFuture<DefaultResultMessage>> receiveMap;
 
     public DefaultServiceClient(MessageSender sender, MessageListener listener, ServiceExecutor executor) {
         this.sender = sender;
@@ -41,30 +44,39 @@ public class DefaultServiceClient implements ServiceClient {
             log.debug("client receive result:{}", message.getId());
         }
         if (message instanceof DefaultResultMessage) {
-            MessageFutureTask<DefaultResultMessage> futureTask = this.receiveMap.get(message.getId());
+            CompletableFuture<DefaultResultMessage> futureTask = this.receiveMap.get(message.getId());
             if (null != futureTask) {
-                futureTask.setResult((DefaultResultMessage) message);
+                futureTask.complete((DefaultResultMessage) message);
             }
-        }
-        if (null != this.executor && message instanceof DefaultInvokeMessage) {
+        } else if (null != this.executor && message instanceof DefaultInvokeMessage) {
             this.executor.execute(event.getSender(), (DefaultInvokeMessage) message);
         }
     }
 
     @Override
     public DefaultResultMessage send(DefaultInvokeMessage message, long timeout) {
-        this.sender.send(message);
         if (message.getNotify()) {
+            this.sender.send(message);
             return new DefaultResultMessage();
         } else {
-            MessageFutureTask<DefaultResultMessage> futureTask = new MessageFutureTask<>(message);
+            CompletableFuture<DefaultResultMessage> futureTask = new CompletableFuture<>();
             receiveMap.put(message.getId(), futureTask);
+            this.sender.send(message);
             try {
-                timeout = timeout <= 0 ? 15 : timeout;
-                return futureTask.get(timeout, TimeUnit.SECONDS);
-            } catch (InterruptedException | ExecutionException | TimeoutException | BusiException e) {
-                e.printStackTrace();
+                if (timeout > 0) {
+                    return futureTask.get(timeout, TimeUnit.SECONDS);
+                } else {
+                    return futureTask.get();
+                }
+            } catch (TimeoutException e) {
                 return new DefaultResultMessage("RPC请求超时", 504);
+            } catch (Exception e) {
+                if (e instanceof BusiException) {
+                    return new DefaultResultMessage(e.getMessage(), ((BusiException) e).getCode());
+                }
+                Logger logger = LoggerFactory.getLogger(getClass());
+                logger.error("RPC请求异常", e);
+                return new DefaultResultMessage("RPC请求异常", 500);
             } finally {
                 receiveMap.remove(message.getId());
             }
@@ -79,6 +91,6 @@ public class DefaultServiceClient implements ServiceClient {
         if (listener instanceof AutoCloseable) {
             ((AutoCloseable) listener).close();
         }
-        log.info("client closed");
+        log.debug("client closed");
     }
 }

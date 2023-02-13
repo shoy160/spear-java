@@ -42,9 +42,6 @@ public class CommonUtils {
         if (obj == null) {
             return null;
         }
-        if (obj.getClass() == clazz) {
-            return clazz.cast(obj);
-        }
         return clazz.cast(obj);
     }
 }

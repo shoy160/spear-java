@@ -66,16 +66,4 @@ public interface MessageSerializer {
         }
         return CommonUtils.cast(msg, type);
     }
-
-    /**
-     * 反序列化匿名数据
-     *
-     * @param data          byte[]
-     * @param typeReference 对象类型
-     * @param <T>           T
-     * @return 对象值
-     */
-    default <T> T deserializeT(byte[] data, TypeReference<T> typeReference) {
-        return deserializeT(data, (Class<T>) typeReference.getType());
-    }
 }

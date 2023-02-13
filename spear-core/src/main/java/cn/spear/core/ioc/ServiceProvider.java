@@ -1,7 +1,5 @@
 package cn.spear.core.ioc;
 
-import cn.spear.core.util.CommonUtils;
-
 import java.lang.reflect.Type;
 
 /**

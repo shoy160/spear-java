@@ -53,6 +53,7 @@ public class ServiceAddress implements Weight {
     public ServiceAddress() {
         this.gzip = true;
         this.weight = 1;
+        this.protocol = ServiceProtocol.Tcp;
     }
 
     public ServiceAddress(String host, int port) {
@@ -60,6 +61,11 @@ public class ServiceAddress implements Weight {
         this.host = host;
         this.port = port;
         this.servicePort = port;
+    }
+
+    public ServiceAddress(String host, int port, ServiceProtocol protocol) {
+        this(host, port);
+        this.protocol = protocol;
     }
 
     @Override

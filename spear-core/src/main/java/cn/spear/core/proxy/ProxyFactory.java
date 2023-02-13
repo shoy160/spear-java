@@ -64,6 +64,6 @@ public interface ProxyFactory {
         if (instance == null) {
             return null;
         }
-        return (T) instance;
+        return clazz.cast(instance);
     }
 }

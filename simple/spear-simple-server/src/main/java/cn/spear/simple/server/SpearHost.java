@@ -26,7 +26,6 @@ public class SpearHost {
 
         ServiceAddress address = new ServiceAddress("127.0.0.1", 9501);
         address.setGzip(true);
-        address.setService("192.168.2.54");
         host.start(address);
     }
 }

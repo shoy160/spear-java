@@ -1,7 +1,10 @@
 package cn.spear.core.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author shay
@@ -27,5 +30,11 @@ public class RandomUtils {
 
     public static String fastId() {
         return UUID.randomUUID().toString();
+    }
+
+    public static <T> T randomGet(Collection<T> collections){
+        int size = collections.size();
+        Random random = new Random();
+        return new ArrayList<>(collections).get(random.nextInt(size));
     }
 }

@@ -54,6 +54,7 @@ public class DefaultServiceExecutor implements ServiceExecutor {
     public void execute(MessageSender sender, DefaultInvokeMessage message) {
         ServiceEntry entry = this.entryFactory.find(message.getServiceId());
         if (null == entry) {
+            log.error("未找到服务入口");
             send(sender, message.getId(), new DefaultResultMessage("服务未找到", 404));
             return;
         }

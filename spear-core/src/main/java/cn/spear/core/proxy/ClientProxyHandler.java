@@ -6,6 +6,8 @@ import cn.spear.core.message.model.impl.DefaultInvokeMessage;
 import cn.spear.core.message.model.impl.DefaultResultMessage;
 import cn.spear.core.service.*;
 import cn.spear.core.util.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
