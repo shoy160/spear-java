@@ -2,11 +2,9 @@ package cn.spear.protocol.tcp.handler;
 
 import cn.spear.core.message.MessageCodec;
 import cn.spear.core.message.model.impl.BaseMessage;
-import cn.spear.core.util.TypeUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.util.ReferenceCountUtil;
 
 /**
  * @author shay
@@ -25,7 +23,7 @@ public class MessageHandler<T extends BaseMessage> extends SimpleChannelInboundH
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext context, ByteBuf buffer) throws Exception {
+    protected void channelRead0(ChannelHandlerContext context, ByteBuf buffer) {
         byte[] data = new byte[buffer.readableBytes()];
         buffer.readBytes(data);
         T serviceMsg = this.codec.decodeT(data, this.clazz, this.gzip);

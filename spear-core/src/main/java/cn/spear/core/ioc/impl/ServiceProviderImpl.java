@@ -22,6 +22,14 @@ public class ServiceProviderImpl implements ServiceProvider {
         serviceCache = new ConcurrentHashMap<>();
     }
 
+    private void cleanScope() {
+        for (ServiceDescriptor descriptor : descriptors) {
+            if (ServiceLifetime.Scoped.equals(descriptor.getLifetime())) {
+                serviceCache.remove(descriptor.getServiceType());
+            }
+        }
+    }
+
     @Override
     public Object getService(Type serviceType) {
         if (serviceCache.containsKey(serviceType)) {
@@ -51,5 +59,15 @@ public class ServiceProviderImpl implements ServiceProvider {
             }
         }
         return null;
+    }
+
+    @Override
+    public void startScope() {
+        cleanScope();
+    }
+
+    @Override
+    public void completeScope() {
+        cleanScope();
     }
 }

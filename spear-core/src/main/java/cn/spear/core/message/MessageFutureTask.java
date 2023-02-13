@@ -1,7 +1,9 @@
 package cn.spear.core.message;
 
-import cn.spear.core.exception.BusiException;
+import cn.spear.core.SpearCode;
+import cn.spear.core.exception.SpearException;
 import cn.spear.core.message.model.impl.BaseMessage;
+import lombok.NonNull;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -66,7 +68,7 @@ public class MessageFutureTask<T extends BaseMessage> implements Future<T> {
     }
 
     @Override
-    public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+    public T get(long timeout, @NonNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         if (!this.done) {
             synchronized (messageLock) {
                 if (timeout < 0) {
@@ -81,11 +83,11 @@ public class MessageFutureTask<T extends BaseMessage> implements Future<T> {
             }
         }
         if (!this.done) {
-            throw new BusiException(String.format("RPC调用超时,requestId:%s", request.getId()), 504);
+            throw new SpearException(SpearCode.TIME_OUT, String.format("RPC调用超时,requestId:%s", request.getId()));
         }
         if (null != this.throwable) {
             this.throwable.printStackTrace();
-            throw new BusiException("RPC调用异常：" + this.throwable.getMessage(), 500);
+            throw new SpearException(SpearCode.INTERNAL_SERVER_ERROR, "RPC调用异常：" + this.throwable.getMessage());
         }
         return result;
     }

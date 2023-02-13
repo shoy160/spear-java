@@ -55,7 +55,7 @@ public abstract class BaseServiceClientFactory implements ServiceClientFactory {
             }
             clientCache.putIfAbsent(address, clients);
         }
-        return RandomUtils.randomGet(clients);
+        return RandomUtils.randomEle(clients);
     }
 
     protected void removeClient(ServiceAddress address) {

@@ -4,6 +4,7 @@ import cn.spear.core.lang.Func;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -206,5 +207,26 @@ public class ReflectUtils {
                 }
             }
         }
+    }
+
+    /**
+     * 获得一个类中所有字段列表，直接反射获取，无缓存<br>
+     * 如果子类与父类中存在同名字段，则这两个字段同时存在，子类字段在前，父类字段在后。
+     *
+     * @param beanClass            类
+     * @param withSuperClassFields 是否包括父类的字段列表
+     * @return 字段列表
+     * @throws SecurityException 安全检查异常
+     */
+    public static Field[] getFields(Class<?> beanClass, boolean withSuperClassFields) throws SecurityException {
+        List<Field> allFields = new ArrayList<>();
+        Class<?> searchType = beanClass;
+        Field[] declaredFields;
+        while (searchType != null) {
+            declaredFields = searchType.getDeclaredFields();
+            allFields.addAll(Arrays.asList(declaredFields));
+            searchType = withSuperClassFields ? searchType.getSuperclass() : null;
+        }
+        return allFields.toArray(new Field[0]);
     }
 }

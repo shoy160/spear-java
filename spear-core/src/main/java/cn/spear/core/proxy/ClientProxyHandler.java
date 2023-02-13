@@ -1,6 +1,7 @@
 package cn.spear.core.proxy;
 
-import cn.spear.core.exception.BusiException;
+import cn.spear.core.SpearCode;
+import cn.spear.core.exception.SpearException;
 import cn.spear.core.ioc.IocContext;
 import cn.spear.core.message.model.impl.DefaultInvokeMessage;
 import cn.spear.core.message.model.impl.DefaultResultMessage;
@@ -31,11 +32,11 @@ public class ClientProxyHandler implements InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) {
         List<ServiceAddress> addressList = this.finder.find(method.getDeclaringClass());
         ServiceAddress address = ArrayUtils.randomWeight(addressList);
         if (null == address) {
-            throw new BusiException("服务未找到", 404);
+            throw SpearCode.NOT_FOUND.exception();
         }
         ServiceClient client = clientFactory.create(address);
         DefaultInvokeMessage message = this.serviceGenerator.createMessage(method, args);
@@ -43,7 +44,7 @@ public class ClientProxyHandler implements InvocationHandler {
         if (null == result || !result.success()) {
             String error = null == result ? "服务调用异常" : result.getMessage();
             int code = null == result ? 500 : result.getCode();
-            throw new BusiException(error, code);
+            throw new SpearException(code, error);
         }
         return result.getContent();
     }

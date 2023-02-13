@@ -6,7 +6,7 @@ import cn.spear.core.message.model.InvokeMessage;
 import cn.spear.core.message.model.ResultMessage;
 import cn.spear.core.message.model.impl.*;
 import cn.spear.core.util.CommonUtils;
-import cn.spear.core.util.StreamUtils;
+import cn.spear.core.util.BufferUtils;
 import cn.spear.core.util.TypeUtils;
 
 /**
@@ -77,7 +77,7 @@ public abstract class BaseMessageCodec<TDynamic extends BaseDynamicMessage, TInv
         byte[] buffer = encodeMessage(message);
         int gzipLength = 200;
         if (gzip && buffer.length > gzipLength) {
-            return StreamUtils.gzip(buffer);
+            return BufferUtils.gzip(buffer);
         }
         return buffer;
     }
@@ -86,7 +86,7 @@ public abstract class BaseMessageCodec<TDynamic extends BaseDynamicMessage, TInv
     public Object decode(byte[] data, Class<?> clazz, boolean gzip) {
         byte[] buffer = data;
         if (gzip) {
-            buffer = StreamUtils.unGzip(buffer);
+            buffer = BufferUtils.unGzip(buffer);
         }
         return decodeMessage(buffer, clazz);
     }

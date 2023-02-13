@@ -21,6 +21,7 @@ import java.util.Objects;
 @Setter
 public class ServiceAddress implements Weight {
 
+    private final static String LOCAL_HOST_REG = "^(\\*|(localhost))$";
     private String host;
     private Integer port;
     /**
@@ -56,6 +57,10 @@ public class ServiceAddress implements Weight {
         this.protocol = ServiceProtocol.Tcp;
     }
 
+    public ServiceAddress(int port) {
+        this("localhost", port);
+    }
+
     public ServiceAddress(String host, int port) {
         this();
         this.host = host;
@@ -67,6 +72,7 @@ public class ServiceAddress implements Weight {
         this(host, port);
         this.protocol = protocol;
     }
+
 
     @Override
     public String toString() {
@@ -87,6 +93,10 @@ public class ServiceAddress implements Weight {
 
     public SocketAddress getServerAddress() {
         return new InetSocketAddress(this.host, this.port);
+    }
+
+    public boolean isLocal() {
+        return CommonUtils.isEmpty(this.host) || this.host.matches(LOCAL_HOST_REG);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package cn.spear.core.util;
 
+import cn.spear.core.Constants;
 import cn.spear.core.lang.Func;
 
 import java.io.UnsupportedEncodingException;
@@ -13,6 +14,37 @@ import java.util.*;
  * @date 2020/9/9
  */
 public class MapUtils {
+
+    public static Map<String, Object> map(Object obj) {
+        return map(obj, null);
+    }
+
+    public static Map<String, Object> map(Object obj, Func<String, String> keyEditor) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        if (obj == null) {
+            return map;
+        }
+        try {
+            if (obj instanceof Map) {
+                Map<?, ?> item = (Map<?, ?>) obj;
+                for (Object key : item.keySet()) {
+                    String mapKey = key.toString();
+                    if (null != keyEditor) {
+                        mapKey = keyEditor.invoke(mapKey);
+                    }
+                    if (CommonUtils.isEmpty(mapKey)) {
+                        continue;
+                    }
+                    map.put(mapKey, item.get(key));
+                }
+                return map;
+            }
+            // todo
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return map;
+    }
 
     /**
      * Map Key过滤
@@ -213,7 +245,7 @@ public class MapUtils {
     public static <K, V> String joinUrlEncode(Map<K, V> map, boolean ignoreNull, String charset) {
         return join(map, "&", "=", ignoreNull, null, value -> {
             if (null == value) {
-                return "";
+                return Constants.EMPTY_STR;
             }
             try {
                 return URLEncoder.encode(value.toString(), charset);
@@ -327,5 +359,32 @@ public class MapUtils {
             }
         }
         return builder.toString();
+    }
+
+    public static <K, V> String get(Map<K, V> map, K key, String defaultValue) {
+        try {
+            if (!map.containsKey(key)) {
+                return defaultValue;
+            }
+            V value = map.get(key);
+            return value == null ? defaultValue : value.toString();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return defaultValue;
+        }
+    }
+
+    public static <T, K, V> T get(Map<K, V> map, K key, Class<T> clazz, T defaultValue) {
+        try {
+            if (!map.containsKey(key)) {
+                return defaultValue;
+            }
+            V value = map.get(key);
+            T result = CommonUtils.cast(value, clazz);
+            return result == null ? defaultValue : result;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return defaultValue;
+        }
     }
 }

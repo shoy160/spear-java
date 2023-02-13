@@ -1,7 +1,6 @@
 package cn.spear.core.message;
 
 
-import cn.spear.core.lang.TypeReference;
 import cn.spear.core.util.CommonUtils;
 
 import java.lang.reflect.Type;

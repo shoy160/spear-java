@@ -7,6 +7,7 @@ import cn.spear.core.message.impl.DefaultMessageListener;
 import cn.spear.core.message.model.impl.DefaultInvokeMessage;
 import cn.spear.core.service.ServiceAddress;
 import cn.spear.core.service.ServiceListener;
+import cn.spear.core.util.CommonUtils;
 import cn.spear.protocol.tcp.handler.MessageHandler;
 import cn.spear.protocol.tcp.handler.ServerHandler;
 import cn.spear.protocol.tcp.sender.TcpServerSender;
@@ -19,6 +20,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import lombok.extern.slf4j.Slf4j;
+
+import java.net.InetAddress;
+import java.net.SocketAddress;
 
 /**
  * @author shay
@@ -36,8 +40,6 @@ public class TcpServiceListener extends DefaultMessageListener implements Servic
     @Override
     public void start(ServiceAddress address) {
         log.debug("ready to listen at:{}", address.toString());
-
-        MessageListener listener = this;
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         ServerBootstrap bootstrap = new ServerBootstrap();
@@ -52,12 +54,17 @@ public class TcpServiceListener extends DefaultMessageListener implements Servic
                                 .addLast(new LengthFieldPrepender(4))
                                 .addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4))
                                 .addLast(new MessageHandler<>(codec, address.getGzip(), DefaultInvokeMessage.class))
-                                .addLast(new ServerHandler(codec, address, listener))
+                                .addLast(new ServerHandler(address, codec, event -> onReceived(event)))
+
                         ;
                     }
                 });
-
-        ChannelFuture future = bootstrap.bind(address.getServerAddress());
+        ChannelFuture future;
+        if (address.isLocal()) {
+            future = bootstrap.bind(address.getPort());
+        } else {
+            future = bootstrap.bind(address.getServerAddress());
+        }
         this.channel = future.channel();
         try {
             this.channel.closeFuture().sync();

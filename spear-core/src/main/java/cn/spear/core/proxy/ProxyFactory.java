@@ -1,5 +1,9 @@
 package cn.spear.core.proxy;
 
+import cn.spear.core.Singleton;
+import cn.spear.core.convert.Convert;
+import cn.spear.core.proxy.impl.DefaultProxyFactory;
+
 import java.lang.reflect.InvocationHandler;
 
 /**
@@ -61,9 +65,15 @@ public interface ProxyFactory {
      */
     default <T> T createT(Class<T> clazz, InvocationHandler handler) {
         Object instance = create(clazz, handler);
-        if (instance == null) {
-            return null;
-        }
-        return clazz.cast(instance);
+        return Convert.convert(instance, clazz);
+    }
+
+    /**
+     * 获取默认实例
+     *
+     * @return proxyFactory
+     */
+    static ProxyFactory instance() {
+        return Singleton.instance(DefaultProxyFactory.class);
     }
 }

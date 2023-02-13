@@ -1,11 +1,9 @@
 package cn.spear.core.test;
 
+import cn.spear.core.ioc.IocContext;
 import cn.spear.core.ioc.ServiceCollection;
-import cn.spear.core.ioc.ServiceProvider;
-import cn.spear.core.ioc.impl.ServiceCollectionImpl;
 import cn.spear.core.test.model.ServiceDTO;
-import cn.spear.core.util.CommonUtils;
-import cn.spear.core.util.RandomUtils;
+import cn.spear.core.util.IdentityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -15,23 +13,28 @@ import org.junit.Test;
  */
 @Slf4j
 public class IocTest {
-    private final ServiceProvider provider;
+//    private final ServiceProvider provider;
 
     public IocTest() {
-        ServiceCollection services = new ServiceCollectionImpl();
-        services.addSingleton(ServiceDTO.class, serviceProvider -> {
+        ServiceCollection services = ServiceCollection.instance();
+        services.addScoped(ServiceDTO.class, serviceProvider -> {
             ServiceDTO dto = new ServiceDTO();
-            dto.setId(RandomUtils.fastId());
+            dto.setId(IdentityUtils.fastId());
             return dto;
         });
-        this.provider = services.build();
+        services.build();
     }
 
     @Test
     public void getServiceTest() {
         for (int i = 0; i < 100; i++) {
-            ServiceDTO service = this.provider.getServiceT(ServiceDTO.class);
-            log.info("[{}] -> id :{}", i, service.getId());
+            final int index = i;
+            IocContext.scope(provider -> {
+                for (int j = 0; j < 5; j++) {
+                    ServiceDTO service = provider.getServiceT(ServiceDTO.class);
+                    log.info("[{}-{}] -> id :{}", index, j, service.getId());
+                }
+            });
         }
     }
 }

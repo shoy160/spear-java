@@ -2,9 +2,6 @@ package cn.spear.protocol.tcp;
 
 import cn.spear.core.ioc.IocContext;
 import cn.spear.core.message.MessageCodec;
-import cn.spear.core.message.MessageListener;
-import cn.spear.core.message.MessageSender;
-import cn.spear.core.message.event.MessageEvent;
 import cn.spear.core.message.impl.DefaultMessageListener;
 import cn.spear.core.message.model.impl.DefaultResultMessage;
 import cn.spear.core.service.ServiceAddress;
@@ -17,13 +14,15 @@ import cn.spear.protocol.tcp.handler.MessageHandler;
 import cn.spear.protocol.tcp.sender.TcpClientSender;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
-import io.netty.util.AttributeKey;
 
 /**
  * @author shay
@@ -69,9 +68,9 @@ public class TcpClientFactory extends BaseServiceClientFactory {
         Channel channel = connect.channel();
         DefaultMessageListener listener = new DefaultMessageListener();
         TcpClientSender sender = new TcpClientSender(codec, channel, address);
-        channel.attr(ChannelAttributes.ADDRESS_KEY).set(address);
-        channel.attr(ChannelAttributes.SENDER_KEY).set(sender);
-        channel.attr(ChannelAttributes.LISTENER_KEY).set(listener);
+        channel.attr(TcpAttributes.ADDRESS_KEY).set(address);
+        channel.attr(TcpAttributes.SENDER_KEY).set(sender);
+        channel.attr(TcpAttributes.LISTENER_KEY).set(listener);
         return new DefaultServiceClient(sender, listener, this.executor);
     }
 }

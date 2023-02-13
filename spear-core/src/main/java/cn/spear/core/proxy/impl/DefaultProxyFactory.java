@@ -1,11 +1,9 @@
 package cn.spear.core.proxy.impl;
 
-import cn.spear.core.proxy.ClientProxyHandler;
 import cn.spear.core.proxy.ProxyFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
