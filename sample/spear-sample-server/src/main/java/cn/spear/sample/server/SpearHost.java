@@ -18,6 +18,7 @@ public class SpearHost {
         ServiceProvider provider =
                 DefaultServiceBuilder.newBuilder()
                         .addCodec(JsonMessageCodec.class)
+//                        .addCodec(ProtobufMessageCodec.class)
                         .addRoute(DefaultServiceRouter.class)
 //                        .addRoute(new NacosServiceRoute("60.255.161.101:8848", "public"))
                         .addServer(TcpServiceBuilder::addTcpProtocol, "cn.spear.sample")

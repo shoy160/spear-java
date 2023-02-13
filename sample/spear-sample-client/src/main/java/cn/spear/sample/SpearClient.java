@@ -23,18 +23,17 @@ public class SpearClient {
         Logger logger = LoggerFactory.getLogger(SpearClient.class);
 
         DefaultServiceRouter router = new DefaultServiceRouter();
-        ServiceAddress address = new ServiceAddress("127.0.0.1", 9501);
+        ServiceAddress address = new ServiceAddress(9501);
         router.regist("sample-service", address);
 
         ServiceProvider provider =
                 DefaultServiceBuilder.newBuilder()
                         .addCodec(JsonMessageCodec.class)
+//                        .addCodec(ProtobufMessageCodec.class)
                         .addRoute(router)
+//                        .addRoute(new NacosServiceRoute("60.255.161.101:8848", "public"))
                         .addClient(builder ->
                                 TcpServiceBuilder.addTcpProtocolClient(builder, 1))
-
-//                        .addRoute(new NacosServiceRoute("60.255.161.101:8848", "public"))
-                        .addClient(TcpServiceBuilder::addTcpProtocolClient)
                         .build();
         batchTest(provider, logger);
         provider.getServiceT(ServiceClientFactory.class).close();
@@ -50,7 +49,6 @@ public class SpearClient {
     private static void batchTest(ServiceProvider provider, Logger logger) {
         ProxyFactory proxyFactory = provider.getServiceT(ProxyFactory.class);
         UserClient client = proxyFactory.createT(UserClient.class);
-//        MessageCodec codec = provider.getServiceT(MessageCodec.class);
         client.hello("shay");
         long time = System.currentTimeMillis();
         int count = 10000;

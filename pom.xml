@@ -6,7 +6,7 @@
     <groupId>io.github.shoy160</groupId>
     <artifactId>spear-java</artifactId>
     <name>${project.artifactId}</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
     <modules>
         <module>spear-core</module>
         <module>protocols</module>
@@ -25,7 +25,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.spear>1.0-SNAPSHOT</version.spear>
+        <version.spear>1.0.1</version.spear>
         <version.lombok>1.18.12</version.lombok>
         <version.junit>4.13</version.junit>
         <version.logback>1.2.3</version.logback>

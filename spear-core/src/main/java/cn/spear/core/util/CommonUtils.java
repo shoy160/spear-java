@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * 常用辅助类
+ *
  * @author shay
  * @date 2020/9/4
  */

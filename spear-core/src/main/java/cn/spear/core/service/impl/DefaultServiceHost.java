@@ -7,8 +7,7 @@ import cn.spear.core.service.enums.ServiceProtocol;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * @author shay
@@ -38,9 +37,15 @@ public class DefaultServiceHost extends BaseServiceHost {
             ServiceCodec codec = IocContext.getServiceT(ServiceCodec.class);
             address.setProtocol(protocol);
             address.setCodec(codec);
-            Thread t = new Thread(() -> listener.start(address));
-            t.start();
-            log.info("服务已启动:{},Gzip:{},Codec:{},Protocol:{}", address, address.getGzip(), address.getCodec(), address.getProtocol());
+            Executors.newSingleThreadExecutor().submit(() -> {
+                try {
+                    listener.start(address);
+                    log.info("服务已启动:{},Gzip:{},Codec:{},Protocol:{}", address, address.getGzip(), address.getCodec(), address.getProtocol());
+                } catch (Exception e) {
+                    log.error("服务启动异常", e);
+                }
+            });
+
         } catch (Exception ex) {
             log.error("服务启动失败", ex);
         }
