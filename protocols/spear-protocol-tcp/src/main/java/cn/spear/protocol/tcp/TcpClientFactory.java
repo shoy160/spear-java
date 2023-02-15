@@ -34,6 +34,10 @@ public class TcpClientFactory extends BaseServiceClientFactory {
     public TcpClientFactory(ServiceExecutor executor) {
         this.executor = executor;
     }
+    public TcpClientFactory(ServiceExecutor executor, Integer maxPool) {
+        super(maxPool);
+        this.executor = executor;
+    }
 
     private Bootstrap createBootstrap(MessageCodec codec, boolean gzip) {
         NioEventLoopGroup group = new NioEventLoopGroup();

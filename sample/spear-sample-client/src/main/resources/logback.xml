@@ -8,12 +8,8 @@
             <pattern>%d %-5level %logger{5}: %msg%n</pattern>
             <charset>utf-8</charset>
         </encoder>
-        <!-- 过滤掉非info的日志 -->
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
     </appender>
-    <logger name="cn.spear.core.util" level="DEBUG"/>
+    <logger name="cn.spear" level="DEBUG"/>
     <!-- 日志级别排序为： TRACE < DEBUG < INFO < WARN < ERROR -->
     <!-- 日志输出级别 -->
     <root level="INFO">

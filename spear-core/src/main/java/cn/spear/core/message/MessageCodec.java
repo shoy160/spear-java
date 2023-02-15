@@ -58,6 +58,8 @@ public interface MessageCodec {
      *
      * @param data  数据byte[]
      * @param clazz 类型
+     * @param gzip  是否 gzip 压缩
+     * @param <T>   T
      * @return Object
      */
     default <T> T decodeT(byte[] data, Class<T> clazz, boolean gzip) {

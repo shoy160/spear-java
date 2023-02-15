@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>sample</artifactId>
-        <groupId>cn.spear</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>io.github.shoy160</groupId>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spear-sample-server</artifactId>
@@ -14,25 +14,17 @@
 
     <dependencies>
         <dependency>
-            <groupId>cn.spear</groupId>
+            <groupId>io.github.shoy160</groupId>
             <artifactId>spear-sample-contract</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
-            <groupId>cn.spear</groupId>
+            <groupId>io.github.shoy160</groupId>
             <artifactId>spear-codec-json</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>cn.spear</groupId>
+            <groupId>io.github.shoy160</groupId>
             <artifactId>spear-protocol-tcp</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.spear</groupId>
-            <artifactId>spear-nacos</artifactId>
-            <version>1.0.0</version>
         </dependency>
     </dependencies>
-
 </project>

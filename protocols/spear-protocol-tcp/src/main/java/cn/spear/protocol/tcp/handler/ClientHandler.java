@@ -11,6 +11,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.RequiredArgsConstructor;
 
+import java.util.function.Consumer;
+
 /**
  * @author shay
  * @date 2020/9/14
@@ -24,12 +26,22 @@ public class ClientHandler extends SimpleChannelInboundHandler<DefaultResultMess
     protected void channelRead0(ChannelHandlerContext context, DefaultResultMessage message) {
         MessageListener listener = context.channel().attr(TcpAttributes.LISTENER_KEY).get();
         MessageSender sender = context.channel().attr(TcpAttributes.SENDER_KEY).get();
+
         listener.onReceived(new MessageEvent(sender, message));
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
+        ServiceAddress address = ctx.channel().attr(TcpAttributes.ADDRESS_KEY).get();
+        if(null != removeAction) {
+            removeAction.invoke(address);
+        }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
         ServiceAddress address = ctx.channel().attr(TcpAttributes.ADDRESS_KEY).get();
         if (null != removeAction) {
             removeAction.invoke(address);

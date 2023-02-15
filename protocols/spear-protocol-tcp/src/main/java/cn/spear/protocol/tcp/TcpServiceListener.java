@@ -1,6 +1,7 @@
 package cn.spear.protocol.tcp;
 
 import cn.spear.core.message.MessageCodec;
+import cn.spear.core.message.MessageListener;
 import cn.spear.core.message.event.MessageEvent;
 import cn.spear.core.message.impl.DefaultMessageListener;
 import cn.spear.core.message.model.impl.DefaultInvokeMessage;
@@ -54,6 +55,7 @@ public class TcpServiceListener extends DefaultMessageListener implements Servic
                                 .addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4))
                                 .addLast(new MessageHandler<>(codec, address.getGzip(), DefaultInvokeMessage.class))
                                 .addLast(new ServerHandler(address, codec, event -> onReceived(event)))
+
                         ;
                     }
                 });

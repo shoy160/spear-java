@@ -5,7 +5,6 @@ import cn.spear.core.message.model.impl.BaseMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.util.ReferenceCountUtil;
 
 /**
  * @author shay
@@ -29,5 +28,10 @@ public class MessageHandler<T extends BaseMessage> extends SimpleChannelInboundH
         buffer.readBytes(data);
         T serviceMsg = this.codec.decodeT(data, this.clazz, this.gzip);
         context.fireChannelRead(serviceMsg);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
     }
 }

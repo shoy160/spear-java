@@ -3,9 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>spear</artifactId>
-        <groupId>cn.spear</groupId>
-        <version>1.0.0</version>
+        <artifactId>spear-java</artifactId>
+        <groupId>io.github.shoy160</groupId>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spear-nacos</artifactId>
@@ -14,22 +14,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>cn.spear</groupId>
+            <groupId>io.github.shoy160</groupId>
             <artifactId>spear-core</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba.nacos</groupId>
             <artifactId>nacos-client</artifactId>
-            <version>1.2.1</version>
+            <version>2.2.0</version>
         </dependency>
+
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

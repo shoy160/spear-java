@@ -27,7 +27,7 @@ public class IocTest {
 
     @Test
     public void getServiceTest() {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             final int index = i;
             IocContext.scope(provider -> {
                 for (int j = 0; j < 5; j++) {

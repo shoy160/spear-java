@@ -6,7 +6,6 @@ import cn.spear.core.message.event.MessageEvent;
 import cn.spear.core.message.model.impl.DefaultInvokeMessage;
 import cn.spear.core.service.ServiceAddress;
 import cn.spear.protocol.tcp.sender.TcpServerSender;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.RequiredArgsConstructor;

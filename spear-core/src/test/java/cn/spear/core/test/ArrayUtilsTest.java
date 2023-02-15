@@ -14,33 +14,6 @@ import java.util.*;
 @Slf4j
 public class ArrayUtilsTest {
 
-    @Test
-    public void shortestPathTest() {
-        int[][] grid = new int[][]{
-                {0, 0, 0},
-                {1, 0, 1},
-                {0, 0, 1},
-                {0, 1, 1},
-                {0, 0, 0}
-        };
-        List<String> paths = new ArrayList<>();
-        int m = grid.length, n = grid[0].length;
-        int currentX = 0;
-        for (int y = 0; y < m; y++) {
-            int[] line = grid[y];
-            for (int x = currentX; x < n; x++) {
-                int value = line[y];
-                if (value == 0) {
-                    int nextValue = grid[y + 1][x];
-                    if (nextValue == 0) {
-                        break;
-                    }
-                }
-            }
-        }
-        log.info(String.join(",", paths));
-    }
-
     private ServiceAddress[] getArray() {
         ServiceAddress[] array = new ServiceAddress[3];
         array[0] = new ServiceAddress("127.0.0.1", 1001) {

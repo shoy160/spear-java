@@ -6,15 +6,14 @@ import cn.spear.core.message.model.impl.BaseMessage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author shay
  * @date 2020/9/11
  */
 public class MessageEventSource {
-    private final Semaphore semaphore = new Semaphore(1);
-    private final List<MessageListener> listeners = new ArrayList<>();
+    private final List<MessageListener> listeners = new CopyOnWriteArrayList<>();
 
     private static volatile MessageEventSource instance;
 
@@ -29,38 +28,19 @@ public class MessageEventSource {
     }
 
     public void addListener(MessageListener listener) {
-        try {
-            semaphore.acquire(1);
-            listeners.add(listener);
-            semaphore.release(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+        listeners.add(listener);
     }
 
     public void removeListener(MessageListener listener) {
-        try {
-            semaphore.acquire(1);
-            if (!listeners.isEmpty()) {
-                listeners.remove(listener);
-            }
-            semaphore.release(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (!listeners.isEmpty()) {
+            listeners.remove(listener);
         }
     }
 
     public void onReceive(MessageSender sender, BaseMessage message) {
-        try {
-            semaphore.acquire(1);
-            MessageEvent event = new MessageEvent(sender, message);
-            for (MessageListener listener : listeners) {
-                listener.onReceived(event);
-            }
-            semaphore.release(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        MessageEvent event = new MessageEvent(sender, message);
+        for (MessageListener listener : listeners) {
+            listener.onReceived(event);
         }
     }
 }

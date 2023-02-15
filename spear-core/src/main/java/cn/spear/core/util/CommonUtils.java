@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * 常用辅助类
+ *
  * @author shay
  * @date 2020/9/4
  */
@@ -41,9 +43,6 @@ public class CommonUtils {
     public static <T> T cast(Object obj, Class<T> clazz) {
         if (obj == null) {
             return null;
-        }
-        if (obj.getClass() == clazz) {
-            return clazz.cast(obj);
         }
         return clazz.cast(obj);
     }

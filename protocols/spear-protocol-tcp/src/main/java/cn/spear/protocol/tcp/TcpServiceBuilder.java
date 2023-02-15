@@ -31,10 +31,19 @@ public class TcpServiceBuilder {
      * @param builder builder
      */
     public static void addTcpProtocolClient(ServiceBuilder builder) {
+        addTcpProtocolClient(builder,null);
+    }
+
+    /**
+     * 添加TCP协议客户端
+     *
+     * @param builder builder
+     */
+    public static void addTcpProtocolClient(ServiceBuilder builder, Integer maxPool) {
         builder.addProtocol(ServiceProtocol.Tcp);
         builder.addSingleton(ServiceClientFactory.class, p -> {
             ServiceExecutor executor = p.getServiceT(ServiceExecutor.class);
-            return new TcpClientFactory(executor);
+            return new TcpClientFactory(executor, maxPool);
         });
     }
 }

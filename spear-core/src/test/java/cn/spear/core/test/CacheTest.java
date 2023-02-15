@@ -24,13 +24,12 @@ public class CacheTest {
     }
 
     @Test
-    public void setTest() throws InterruptedException {
+    public void setTest() {
         final String key = "shay";
         this.cache.put(key, "123", 20, TimeUnit.SECONDS);
         for (int i = 0; i < 10; i++) {
             String value = this.cache.get(key);
             log.info("get cache : {} => {}", key, value);
-            TimeUnit.SECONDS.sleep(5);
         }
     }
 }

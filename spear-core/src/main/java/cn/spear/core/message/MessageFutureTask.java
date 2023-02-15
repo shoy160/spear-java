@@ -74,7 +74,10 @@ public class MessageFutureTask<T extends BaseMessage> implements Future<T> {
                 if (timeout < 0) {
                     messageLock.wait();
                 } else {
-                    long timeoutMillis = (TimeUnit.MILLISECONDS == unit) ? timeout : TimeUnit.MILLISECONDS.convert(timeout, unit);
+                    long timeoutMillis =
+                            (TimeUnit.MILLISECONDS == unit)
+                                    ? timeout
+                                    : TimeUnit.MILLISECONDS.convert(timeout, unit);
                     messageLock.wait(timeoutMillis);
                 }
             }

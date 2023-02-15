@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>codec</artifactId>
-        <groupId>cn.spear</groupId>
-        <version>1.0.0</version>
+        <groupId>io.github.shoy160</groupId>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spear-codec-protobuf</artifactId>
@@ -13,9 +13,8 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>cn.spear</groupId>
+            <groupId>io.github.shoy160</groupId>
             <artifactId>spear-core</artifactId>
-            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>
